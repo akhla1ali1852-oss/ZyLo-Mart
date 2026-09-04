@@ -533,6 +533,17 @@ font-size:12px;
     emailjs.init("v6Q6Gq1wJUZn5m03Q");
 })();
 </script>
+<!-- Supabase app -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const supabaseUrl = "https://ghgpuncmdupypxdfhibk.supabase.co";
+const supabaseKey = "sb_publishable_wyPuvavd5bq6Fb8FgE_mFg_lszjv1Ld";
+
+const supabase = window.supabase.createClient(
+    supabaseUrl,
+    supabaseKey
+);
+</script>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-490MKJZKP7"></script>
 <script>
