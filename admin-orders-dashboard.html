@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ZyLo Admin Dashboard</title>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #111;
+        }
+
+        .header {
+            background: #111;
+            color: white;
+            padding: 18px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .logout-btn {
+            background: white;
+            color: #111;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 25px auto;
+        }
+
+        .title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .title-row h2 {
+            margin: 0;
+        }
+
+        .refresh-btn {
+            background: #111;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #message {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .orders {
+            display: grid;
+            gap: 18px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+        }
+
+        .order-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
+
+        .order-id {
+            font-weight: bold;
+        }
+
+        .status {
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #fff3cd;
+            color: #856404;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .order-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .info-box {
+            background: #f8f8f8;
+            padding: 12px;
+            border-radius: 9px;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .total {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 650px) {
+
+            .header {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 18px;
+            }
+
+            .container {
+                width: 92%;
+            }
+
+            .title-row {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .refresh-btn {
+                width: 100%;
+            }
+
+            .order-info {
+                grid-template-columns: 1fr;
+            }
+
+            .order-top {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+
+        <h1>🛒 ZyLo Admin</h1>
+
+        <button class="logout-btn" onclick="adminLogout()">
+            Logout
+        </button>
+
+    </div>
+
+
+    <div class="container">
+
+        <div class="title-row">
+
+            <h2>📦 Customer Orders</h2>
+
+            <button class="refresh-btn" onclick="loadOrders()">
+                🔄 Refresh Orders
+            </button>
+
+        </div>
+        
+        <!-- SEARCH & FILTER -->
+
+        <div style="
+        background:white;
+        padding:15px;
+        border-radius:12px;
+        margin-bottom:20px;
+        box-shadow:0 3px 12px rgba(0,0,0,0.06);
+        ">
+        <input
+        type="text"
+        id="orderSearch"
+        placeholder="🔍 Search name, phone or product..."
+        style="
+        width:100%;
+        padding:13px;
+        border:1px solid #ddd;
+        border-radius:9px;
+        font-size:15px;
+        margin-bottom:10px;
+        "
+        >
+        <select
+        id="statusFilter"
+        style="
+            width:100%;
+            padding:13px;
+            border:1px solid #ddd;
+            border-radius:9px;
+            font-size:15px;
+        "
+        >
+        <option value="all">📋 All Orders</option>
+        <option value="pending">🟡 Pending</option>
+        <option value="confirmed">🔵 Confirmed</option>
+        <option value="shipped">🚚 Shipped</option>
+        <option value="delivered">🟢 Delivered</option>
+        <option value="cancelled">❌ Cancelled</option>
+        </select>
+        </div>
+
+        <div id="message">
+            Loading orders...
+        </div>
+
+        <div class="orders" id="ordersContainer"></div>
+
+    </div>
+
+
+<script>
+
+    // ==========================================
+    // SUPABASE CONNECTION
+    // ==========================================
+
+    const supabaseUrl =
+        "https://ghgpuncmdupypxdfhibk.supabase.co";
+
+    const supabaseKey =
+        "sb_publishable_wyPuvavd5bq6Fb8FgE_mFg_lszjv1Ld";
+
+    const supabaseClient =
+        window.supabase.createClient(
+            supabaseUrl,
+            supabaseKey
+        );
+
+
+    // ==========================================
+    // CHECK ADMIN LOGIN
+    // ==========================================
+
+    async function checkAdmin() {
+
+        const {
+            data: { session }
+        } = await supabaseClient.auth.getSession();
+
+
+        if (!session) {
+
+            window.location.href = "admin-orders.html";
+
+            return false;
+        }
+
+
+        return true;
+    }
+
+
+    // ==========================================
+    // LOAD ORDERS
+    // ==========================================
+
+    let allOrders = [];
+
+    async function loadOrders() {
+
+        const isLoggedIn = await checkAdmin();
+
+        if (!isLoggedIn) {
+            return;
+        }
+
+
+        const message =
+            document.getElementById("message");
+
+        const container =
+            document.getElementById("ordersContainer");
+
+
+        message.textContent =
+            "Loading orders...";
+
+        container.innerHTML = "";
+
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("orders")
+            .select("*")
+            .order("created_at", {
+                ascending: false
+            });
+
+
+        if (error) {
+
+            console.error(
+                "Orders Error:",
+                error
+            );
+
+            message.textContent =
+                "❌ Orders load nahi ho rahe: " +
+                error.message;
+
+            return;
+        }
+
+        allOrders = data;
+
+        if (!data || data.length === 0) {
+
+            message.textContent =
+                "📭 Abhi koi order nahi hai.";
+
+            return;
+        }
+
+
+        message.textContent =
+            `✅ ${data.length} order(s) found`;
+
+
+        data.forEach(order => {
+
+            const card =
+                document.createElement("div");
+
+            card.className =
+                "order-card";
+
+
+            card.innerHTML = `
+
+                <div class="order-top">
+
+                    <div class="order-id">
+                        Order #${order.id}
+                    </div>
+
+                    <div>
+                    <strong>Status</strong><br>
+                    <select
+                    onchange="updateOrderStatus(${order.id}, this.value)"
+                    style="
+                    margin-top:6px;
+                    padding:8px;
+                    border:1px solid #ddd;
+                    border-radius:8px;
+                    font-weight:bold;
+                    "
+                    >
+                    <option value="pending" ${order.status === "pending" ? "selected" : ""}>
+                        Pending
+                    </option>
+                    <option value="confirmed" ${order.status === "confirmed" ? "selected" : ""}>
+                        Confirmed
+                    </option>
+                    <option value="shipped" ${order.status === "shipped" ? "selected" : ""}>
+                        Shipped
+                    </option>
+                    <option value="delivered" ${order.status === "delivered" ? "selected" : ""}>
+                        Delivered
+                    </option>
+                    <option value="cancelled" ${order.status === "cancelled" ? "selected" : ""}>
+                        Cancelled
+                    </option>
+                    </select>
+                    </div>
+                </div>
+                
+                
+                <div class="order-info">
+                    <div class="info-box">
+                        <strong>Customer Name</strong>
+                        ${order.customer_name || "-"}
+                    </div>
+
+
+                    <div class="info-box">
+                        <strong>Phone</strong>
+                        ${order.phone || "-"}
+                    </div>
+
+
+                    <div class="info-box">
+                        <strong>Product</strong>
+                        ${order.product_name || "-"}
+                    </div>
+
+
+                    <div class="info-box">
+                        <strong>Quantity</strong>
+                        ${order.quantity || 0}
+                    </div>
+
+
+                    <div class="info-box">
+                        <strong>Payment Method</strong>
+                        ${order.payment_method || "-"}
+                    </div>
+
+
+                    <div class="info-box">
+                        <strong>Price</strong>
+                        ₹${order.price || 0}
+                    </div>
+
+
+                    <div class="info-box">
+                        <strong>Address</strong>
+                        ${order.address || "-"}
+                    </div>
+
+
+                    <div class="info-box">
+                        <strong>Order Date</strong>
+                        ${new Date(order.created_at)
+                            .toLocaleString("en-IN")}
+                    </div>
+
+                </div>
+
+
+                <div class="total">
+                    Total: ₹${order.total_price || 0}
+                </div>
+
+            `;
+
+
+            container.appendChild(card);
+
+        });
+
+    }
+
+
+    // SEARCH & FILTER
+
+    function applyFilters() {
+
+    const searchText =
+        document.getElementById("orderSearch").value
+        .toLowerCase()
+        .trim();
+
+    const selectedStatus =
+        document.getElementById("statusFilter").value;
+
+    const cards =
+        document.querySelectorAll(".order-card");
+
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+
+        const cardText =
+            card.textContent.toLowerCase();
+
+        const statusSelect =
+            card.querySelector("select");
+
+        const cardStatus =
+            statusSelect ? statusSelect.value : "";
+
+        const searchMatch =
+            cardText.includes(searchText);
+
+        const statusMatch =
+            selectedStatus === "all" ||
+            cardStatus === selectedStatus;
+            
+        if (searchMatch && statusMatch) {
+            card.style.display = "";
+            visibleCount++;
+        } else {
+            card.style.display = "none";
+        }
+
+    });
+
+    const message =
+        document.getElementById("message");
+
+    message.textContent =
+        `✅ ${visibleCount} order(s) found`;
+    }
+
+    // Search typing
+    document
+        .getElementById("orderSearch")
+        .addEventListener("input", applyFilters);
+
+    // Status filter
+    document
+        .getElementById("statusFilter")
+        .addEventListener("change", applyFilters);
+
+    // ==========================================
+    // UPDATE ORDER STATUS
+    // ==========================================
+    
+    async function updateOrderStatus(orderId, newStatus) {
+        const { error } = await supabaseClient
+        .from("orders")
+        .update({
+            status: newStatus
+        })
+        .eq("id", orderId);
+        
+        if (error) {
+            console.error("Status Update Error:", error);
+            alert(
+            "❌ Status update nahi hua:\n" +
+            error.message
+        );
+        return;
+    }
+
+
+    alert(
+        "✅ Order #" +
+        orderId +
+        " status updated to " +
+        newStatus
+    );
+
+    }
+
+
+    // ==========================================
+    // ADMIN LOGOUT
+    // ==========================================
+
+    async function adminLogout() {
+
+        const {
+            error
+        } = await supabaseClient.auth.signOut();
+
+
+        if (error) {
+
+            alert(
+                "Logout failed: " +
+                error.message
+            );
+
+            return;
+        }
+
+
+        window.location.href =
+            "admin-orders.html";
+
+    }
+
+
+    // ==========================================
+    // START DASHBOARD
+    // ==========================================
+
+    loadOrders();
+
+</script>
+
+</body>
+</html>

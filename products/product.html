@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Product | ZyLo</title>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #222;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .product-page {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .image-section {
+            text-align: center;
+        }
+
+        .main-image {
+            width: 100%;
+            max-width: 450px;
+            height: 450px;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .product-info {
+            padding: 10px;
+        }
+
+        .product-name {
+            font-size: 30px;
+            margin-bottom: 15px;
+        }
+
+        .price-box {
+            margin: 20px 0;
+        }
+
+        .selling-price {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .mrp {
+            font-size: 18px;
+            color: #777;
+            text-decoration: line-through;
+            margin-left: 10px;
+        }
+
+        .discount {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 6px 10px;
+            background: #e8f7e8;
+            color: green;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .description {
+            margin: 25px 0;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .stock {
+            margin: 15px 0;
+            font-weight: bold;
+        }
+
+        .order-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #111;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .order-btn:hover {
+            opacity: 0.9;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 20px;
+        }
+
+        .error {
+            text-align: center;
+            padding: 50px;
+            color: red;
+            font-size: 18px;
+        }
+
+        @media (max-width: 700px) {
+            .product-page {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 15px;
+            }
+
+            .main-image {
+                height: 300px;
+            }
+
+            .product-name {
+                font-size: 24px;
+            }
+
+            .selling-price {
+                font-size: 28px;
+            }
+        }
+        .main-image-box {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin: auto;
+        }
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.65);
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 2;
+        }
+        .prev-btn {
+            left: 10px;
+        }
+        .next-btn {
+            right: 10px;
+        }
+        .thumbnail-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .thumbnail {
+            width: 65px;
+            height: 65px;
+            object-fit: cover;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .thumbnail.active {
+            border-color: #111;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div id="loading" class="loading">
+            Product loading...
+        </div>
+
+        <div id="error" class="error" style="display:none;">
+            Product nahi mila.
+        </div>
+
+        <div id="productPage" class="product-page" style="display:none;">
+            <!-- Product Images -->
+            <div class="image-section">
+                <div class="main-image-box">
+                    <button class="slider-btn prev-btn" onclick="previousImage()">❮</button>
+                    <img id="productImage" class="main-image" src="" alt="Product">
+                    <button class="slider-btn next-btn" onclick="nextImage()">❯</button>
+                </div>
+            <div id="thumbnailContainer" class="thumbnail-container"></div>
+        </div>
+            <!-- Product Information -->
+            <div class="product-info">
+
+                <h1 id="productName" class="product-name">
+                    Product Name
+                </h1>
+
+                <div class="price-box">
+
+                    <span id="productPrice" class="selling-price">
+                        ₹0
+                    </span>
+
+                    <span id="productMrp" class="mrp">
+                        ₹0
+                    </span>
+
+                    <div id="productDiscount" class="discount">
+                        0% OFF
+                    </div>
+
+                </div>
+
+                <p id="productDescription" class="description">
+                    Product description
+                </p>
+
+                <p id="productStock" class="stock">
+                    Stock checking...
+                </p>
+
+                <button class="order-btn" onclick="orderProduct()">
+                    Order Now
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // ==============================
+        // SUPABASE CONFIG
+        // ==============================
+
+        const supabaseUrl = "https://ghgpuncmdupypxdfhibk.supabase.co";
+
+        const supabaseKey = "sb_publishable_wyPuvavd5bq6Fb8FgE_mFg_lszjv1Ld";
+
+        const supabaseClient = window.supabase.createClient(
+            supabaseUrl,
+            supabaseKey
+        );
+
+
+        // ==============================
+        // GET PRODUCT ID FROM URL
+        // ==============================
+
+        const params = new URLSearchParams(window.location.search);
+
+        const productId = params.get("id");
+        let productImages = [];
+        let currentImageIndex = 0;
+
+
+        // ==============================
+        // LOAD PRODUCT
+        // ==============================
+
+        async function loadProduct() {
+
+            if (!productId) {
+
+                document.getElementById("loading").style.display = "none";
+
+                document.getElementById("error").style.display = "block";
+
+                document.getElementById("error").textContent =
+                    "Product ID nahi mila.";
+
+                return;
+            }
+
+
+            const { data: product, error } = await supabaseClient
+                .from("products")
+                .select("*")
+                .eq("id", productId)
+                .eq("is_active", true)
+                .single();
+
+
+            if (error || !product) {
+
+                console.error("Product load error:", error);
+
+                document.getElementById("loading").style.display = "none";
+
+                document.getElementById("error").style.display = "block";
+
+                return;
+            }
+
+
+            console.log("Product:", product);
+            // ==============================
+            // PRODUCT DATA
+            // ==============================
+
+            document.title = product.name + " | ZyLo";
+
+
+            document.getElementById("productName").textContent =
+                product.name;
+
+
+            document.getElementById("productPrice").textContent =
+                "₹" + product.price;
+
+
+            document.getElementById("productMrp").textContent =
+                "₹" + product.mrp;
+
+
+            document.getElementById("productDescription").textContent =
+                product.description || "";
+
+
+            // ==============================
+            // DISCOUNT CALCULATION
+            // ==============================
+
+            if (product.mrp && product.price) {
+
+                const discount =
+                    Math.round(
+                        ((product.mrp - product.price) / product.mrp) * 100
+                    );
+
+                document.getElementById("productDiscount").textContent =
+                    discount + "% OFF";
+
+            } else {
+
+                document.getElementById("productDiscount").style.display =
+                    "none";
+            }
+
+
+            // ==============================
+            // STOCK
+            // ==============================
+
+            if (product.stock > 0) {
+
+                document.getElementById("productStock").textContent =
+                    "Only " + product.stock + " left";
+
+            } else {
+
+                document.getElementById("productStock").textContent =
+                    "Out of Stock";
+
+            }
+
+            // LOAD ALL PRODUCT IMAGES
+
+            productImages = [
+                product.image,
+                product.image2,
+                product.image3,
+                product.image4,
+                product.image5
+            ].filter(img => img && img.trim() !== "");
+            currentImageIndex = 0;
+            showImage(0);
+            // ==============================
+            // SHOW PAGE
+            // ==============================
+
+            document.getElementById("loading").style.display =
+                "none";
+
+            document.getElementById("productPage").style.display =
+                "grid";
+
+        }
+
+        // ===== IMAGE SLIDER =====
+        function showImage(index) {
+            if (productImages.length === 0) return;
+            currentImageIndex = index;
+            document.getElementById("productImage").src =
+            productImages[index];
+            const container =
+            document.getElementById("thumbnailContainer");
+            container.innerHTML = "";
+            productImages.forEach((image, i) => {
+                const thumbnail =
+                document.createElement("img");
+                thumbnail.src = image;
+                thumbnail.className = "thumbnail";
+                if (i === currentImageIndex) {
+                    thumbnail.classList.add("active");
+                }
+                thumbnail.onclick = function () {
+                    showImage(i);
+                };
+                container.appendChild(thumbnail);
+            });
+        }
+        function nextImage() {
+            if (productImages.length <= 1) return;
+            const nextIndex =
+            (currentImageIndex + 1) %
+            productImages.length;
+            showImage(nextIndex);
+        }
+        function previousImage() {
+            if (productImages.length <= 1) return;
+            const previousIndex =
+            (currentImageIndex - 1 +
+            productImages.length) %
+            productImages.length;
+            showImage(previousIndex);
+        }
+
+        // ==============================
+        // ORDER BUTTON
+        // ==============================
+
+        function orderProduct() {
+
+            alert("Order system next step mein connect karenge.");
+
+        }
+
+        // ==============================
+        // START
+        // ==============================
+
+        loadProduct();
+
+    </script>
+    <script src="product.js"></script>
+
+</body>
+</html>

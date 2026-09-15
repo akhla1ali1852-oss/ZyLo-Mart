@@ -539,7 +539,7 @@ font-size:12px;
 const supabaseUrl = "https://ghgpuncmdupypxdfhibk.supabase.co";
 const supabaseKey = "sb_publishable_wyPuvavd5bq6Fb8FgE_mFg_lszjv1Ld";
 
-const supabase = window.supabase.createClient(
+const supabaseClient = window.supabase.createClient(
     supabaseUrl,
     supabaseKey
 );
@@ -1095,7 +1095,7 @@ function searchProducts() {
 document.addEventListener("click", function(event) {
     var box = document.getElementById("detailsBox");
     var card = event.target.closest(".card");
-    if (!card && !box.contains(event.target)) {
+    if (!card && box && !box.contains(event.target)) {
         box.style.display = "none";
     }
 });
@@ -1173,6 +1173,46 @@ window.addEventListener("DOMContentLoaded", function(){
     });
 
 });
+// ===== SUPABASE PRODUCTS =====
+async function testSupabase() {
+    const { data, error } = await supabaseClient
+        .from("products")
+        .select("*")
+        .eq("is_active", true);
+
+    if (error) {
+        console.error("Supabase Error:", error);
+        return;
+    }
+
+    console.log("Supabase Products:", data);
+
+    const productsContainer = document.querySelector(".products");
+    productsContainer.innerHTML = "";
+
+    data.forEach(product => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+            <a href="products/${product.page}?id=${product.id}" class="product-link">
+                <img src="${product.image}" alt="${product.name}">
+                
+                <p>${product.name}</p>
+
+                <div class="price-box">
+                    <span class="offer-price">₹${product.price}</span>
+                </div>
+
+                <p class="tax-text">Inclusive of all taxes</p>
+            </a>
+        `;
+
+        productsContainer.appendChild(card);
+    });
+}
+
+testSupabase();
 </script>
 <div id="contactPopup" style="
 display:none;

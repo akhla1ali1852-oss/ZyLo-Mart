@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ZyLo Admin Order Management</title>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #111;
+        }
+
+        .header {
+            background: #111;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .admin-box {
+            width: 95%;
+            max-width: 450px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.12);
+        }
+
+        .admin-box h2 {
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .admin-box p {
+            text-align: center;
+            color: #666;
+        }
+
+        .admin-box input {
+            width: 100%;
+            padding: 14px;
+            margin-top: 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #111;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            opacity: 0.9;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>🛒 ZyLo Admin</h1>
+    </div>
+
+    <div class="admin-box">
+
+        <h2>Admin Login 🔐</h2>
+
+        <p>Login to manage ZyLo orders</p>
+
+        <input
+            type="email"
+            id="adminEmail"
+            placeholder="Admin Email"
+        >
+
+        <input
+            type="password"
+            id="adminPassword"
+            placeholder="Password"
+        >
+
+        <button class="login-btn" onclick="adminLogin()">
+            Login
+        </button>
+
+        <div id="message"></div>
+
+    </div>
+
+
+<script>
+
+    // ==========================================
+    // SUPABASE CONNECTION
+    // ==========================================
+
+    const supabaseUrl =
+        "https://ghgpuncmdupypxdfhibk.supabase.co";
+
+    const supabaseKey =
+        "sb_publishable_wyPuvavd5bq6Fb8FgE_mFg_lszjv1Ld";
+
+    const supabaseClient =
+        window.supabase.createClient(
+            supabaseUrl,
+            supabaseKey
+        );
+
+
+    // ==========================================
+    // ADMIN LOGIN
+    // ==========================================
+
+    async function adminLogin() {
+
+        const email =
+            document.getElementById("adminEmail").value.trim();
+
+        const password =
+            document.getElementById("adminPassword").value;
+
+
+        if (!email || !password) {
+
+            document.getElementById("message").textContent =
+                "Please enter email and password.";
+
+            return;
+        }
+
+
+        const { data, error } =
+            await supabaseClient.auth.signInWithPassword({
+
+                email: email,
+                password: password
+
+            });
+
+
+        if (error) {
+
+            console.error(error);
+
+            document.getElementById("message").textContent =
+                "❌ Login failed: " + error.message;
+
+            return;
+        }
+
+
+        // Login successful
+
+        window.location.href = "admin-orders-dashboard.html";
+
+    }
+
+</script>
+
+</body>
+</html>

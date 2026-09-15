@@ -725,6 +725,18 @@ font-size:22px;
 
 }
 </style>
+<!-- Supabase app -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const supabaseUrl = "https://ghgpuncmdupypxdfhibk.supabase.co";
+const supabaseKey = "sb_publishable_wyPuvavd5bq6Fb8FgE_mFg_lszjv1Ld";
+
+const supabaseClient = window.supabase.createClient(
+    supabaseUrl,
+    supabaseKey
+);
+</script>
 
 </head>
 <body>
@@ -741,7 +753,6 @@ font-size:22px;
 
         <div class="dots">
             <span class="dot active"></span>
-            <span class="dot"></span>
             <span class="dot"></span>
         </div>
 
@@ -766,10 +777,7 @@ font-size:22px;
         <span class="selling-price">
             ₹119
         </span>
-
-        <span class="mrp">
-            ₹149
-        </span>
+        <span id="productMrp">₹149</span>
 
         <span class="discount">
             20% OFF
@@ -791,35 +799,7 @@ font-size:22px;
 
 </div>
 
-    <p>
-
-    <p>
-        Description:<br>
-        Leaf Shape Self-Draining Soap Holder with Suction Cup 
-        | Premium Decorative Soap Dish for Bathroom & Kitchen
-    </p>
-
-    <p>
-        **Leaf Shape Soap Holder** is a stylish and smart solution 
-        for your bathroom and kitchen. Its unique leaf-shaped 
-        design not only looks elegant but also helps prevent 
-        your soap from becoming soft and mushy. The holder features 
-        a **45° tilted drainage system** that allows excess water to 
-        flow directly into the sink, keeping your soap dry, clean, 
-        and long-lasting. It also comes with a **strong suction cup 
-        base**, which securely attaches to smooth surfaces like tiles 
-        and marble without the need for drilling, screws, or any tools. 
-        This makes installation quick, easy, and damage-free.
-    </p>
-
-    <p>
-        <b>Quantity: 2 pics</b>
-        ✔ Size: Medium<br>
-        ✔ Material: Plastic<br>
-        ✔ Easy To Clean<br>
-        ✔ Suitable For Daily Use<br>
-        🚚 Delivery: 1-2 Days
-    </p>
+    <p id="productDescription"></p>
     
     </div>
 
@@ -948,9 +928,8 @@ Support
 <script>
 
 let images = [
-    "../images/soap-holder.jpeg",
-    "../images/soap-holder1.jpeg",
-    "../images/soap-holder2.jpeg"
+    "https://ghgpuncmdupypxdfhibk.supabase.co/storage/v1/object/public/product-images/soap-holder.jpeg",
+    "https://ghgpuncmdupypxdfhibk.supabase.co/storage/v1/object/public/product-images/soap-holder1.jpeg"
 ];
 
 let currentImage = 0;
@@ -1077,5 +1056,76 @@ align-items:center;
         </button>
     </div>
 </div>
+<script>
+const params = new URLSearchParams(window.location.search);
+const productId = params.get("id");
+
+async function loadProduct() {
+
+    if (!productId) {
+        console.error("Product ID nahi mila");
+        return;
+    }
+
+    const { data: product, error } = await supabaseClient
+        .from("products")
+        .select("*")
+        .eq("id", productId)
+        .eq("is_active", true)
+        .single();
+
+    if (error) {
+        console.error("Product load error:", error);
+        return;
+    }
+
+    console.log("Product:", product);
+
+    // Product name
+    document.querySelector("h1").textContent = product.name;
+
+    // Main image
+    document.getElementById("productImage").src = product.image;
+
+    // Price
+    document.querySelector(".selling-price").textContent = "₹" + product.price;
+
+    // Description
+    const description = document.getElementById("productDescription");
+    if (description) {
+        description.textContent = product.description || "";
+    }
+
+    // Stock
+    const stockText = document.querySelector(".stock-left");
+    if (stockText) {
+        stockText.textContent = "Only " + product.stock + " left";
+    }
+
+    // Popup
+    document.getElementById("popupProductImage").src = product.image;
+    document.getElementById("popupProductName").textContent = product.name;
+    document.getElementById("popupProductPrice").textContent = product.price;
+
+    // Order.js ke liye
+    currentProduct = product.name;
+    currentPrice = product.price;
+
+    // Images
+    images = [
+        product.image,
+        product.image2,
+        product.image3,
+        product.image4,
+        product.image5
+    ].filter(img => img && img.trim() !== "");
+
+    currentImage = 0;
+
+    document.getElementById("productImage").src = images[0];
+}
+
+loadProduct();
+</script>
 </body>
 </html>
