@@ -563,10 +563,13 @@ gtag('config', 'G-490MKJZKP7');
 
 <div class="navbar">
     <h2 class="logo">ZyLo Mart</h2>
+
     <div class="nav-links">
         <a href="#">Home</a>
         <a href="#">About Us</a>
         <a href="#" onclick="openContact()">Contact</a>
+        <a href="cart.html">🛒 Cart (<span id="cartCount">0</span>)</a>
+        <a href="login.html">👤 Login</a>
     </div>
 </div>
 
@@ -1082,6 +1085,24 @@ Inclusive of all taxes
 </div>
 
 <script>
+// ===== CART COUNT =====
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem("zyloCart")) || [];
+
+    const totalItems = cart.reduce(
+        (total, item) => total + item.quantity,
+        0
+    );
+
+    const cartCount = document.getElementById("cartCount");
+
+    if (cartCount) {
+        cartCount.textContent = totalItems;
+    }
+}
+
+updateCartCount();
+window.addEventListener("cartUpdated", updateCartCount);
 // ===== SEARCH =====
 function searchProducts() {
     var input = document.querySelector(".search").value.toLowerCase();
@@ -1306,5 +1327,53 @@ border-radius:15px;
     <p>© 2026 ZyLo. All Rights Reserved.</p>
     <p>Contact: officialzylo01@gmail.com</p>
 </footer>
+<script>
+
+// login and lagout
+
+async function checkLoginStatus() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+
+    const navLinks = document.querySelector(".nav-links");
+
+    if (!navLinks) return;
+
+    const loginLink = navLinks.querySelector('a[href="login.html"]');
+
+    if (session && loginLink) {
+
+        loginLink.textContent = "👤 Account";
+        loginLink.href = "#";
+        loginLink.onclick = function (event) {
+            event.preventDefault();
+
+            const logout = confirm(
+                "Logged in as:\n" + session.user.email +
+                "\n\nDo you want to logout?"
+            );
+
+            if (logout) {
+                logoutUser();
+            }
+        };
+    }
+}
+
+async function logoutUser() {
+    const { error } = await supabaseClient.auth.signOut();
+
+    if (error) {
+        alert("Logout failed. Please try again.");
+        console.error(error);
+        return;
+    }
+
+    alert("Logged out successfully!");
+
+    window.location.reload();
+}
+
+checkLoginStatus();
+</script>
 </body>
 </html>

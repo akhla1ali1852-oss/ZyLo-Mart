@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | ZyLo</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .auth-box {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .auth-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #111;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .switch-text {
+            text-align: center;
+            margin-top: 18px;
+            color: #666;
+        }
+
+        .switch-text span {
+            color: #111;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-box">
+
+        <div class="logo">ZyLo Mart</div>
+
+        <p class="subtitle">Your trusted online store</p>
+
+        <h2 id="formTitle">Login</h2>
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+        >
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+        >
+
+        <button onclick="handleAuth()" id="authButton">
+            Login
+        </button>
+
+        <p class="switch-text">
+            <span id="switchLabel">Don't have an account?</span>
+            <span onclick="switchMode()" id="switchButton">
+                Sign Up
+            </span>
+        </p>
+
+        <div id="message" class="message"></div>
+
+    </div>
+
+
+    <script>
+
+        // ==============================
+        // SUPABASE CONFIG
+        // ==============================
+
+        const supabaseUrl =
+            "https://ghgpuncmdupypxdfhibk.supabase.co";
+
+        const supabaseKey =
+            "sb_publishable_wyPuvavd5bq6Fb8FgE_mFg_lszjv1Ld";
+
+        const supabaseClient =
+            window.supabase.createClient(
+                supabaseUrl,
+                supabaseKey
+            );
+
+
+        // ==============================
+        // AUTH MODE
+        // ==============================
+
+        let isLogin = true;
+
+
+        // ==============================
+        // SWITCH LOGIN / SIGNUP
+        // ==============================
+
+        function switchMode() {
+
+            isLogin = !isLogin;
+
+            const formTitle =
+                document.getElementById("formTitle");
+
+            const authButton =
+                document.getElementById("authButton");
+
+            const switchLabel =
+                document.getElementById("switchLabel");
+
+            const switchButton =
+                document.getElementById("switchButton");
+
+            const message =
+                document.getElementById("message");
+
+            message.textContent = "";
+
+            if (isLogin) {
+
+                formTitle.textContent = "Login";
+                authButton.textContent = "Login";
+
+                switchLabel.textContent =
+                    "Don't have an account?";
+
+                switchButton.textContent =
+                    "Sign Up";
+
+            } else {
+
+                formTitle.textContent = "Create Account";
+                authButton.textContent = "Sign Up";
+
+                switchLabel.textContent =
+                    "Already have an account?";
+
+                switchButton.textContent =
+                    "Login";
+            }
+        }
+
+
+        // ==============================
+        // LOGIN / SIGNUP
+        // ==============================
+
+        async function handleAuth() {
+
+            const email =
+                document.getElementById("email").value.trim();
+
+            const password =
+                document.getElementById("password").value;
+
+            const message =
+                document.getElementById("message");
+
+            if (!email || !password) {
+
+                message.textContent =
+                    "Please enter email and password.";
+
+                return;
+            }
+
+            message.textContent = "Please wait...";
+
+
+            // ==============================
+            // SIGN UP
+            // ==============================
+
+            if (!isLogin) {
+
+                const { data, error } =
+                    await supabaseClient.auth.signUp({
+                        email: email,
+                        password: password
+                    });
+
+                if (error) {
+
+                    message.textContent =
+                        error.message;
+
+                    return;
+                }
+
+                message.textContent =
+                    "Account created! Please check your email to confirm your account.";
+
+                document.getElementById("email").value = "";
+                document.getElementById("password").value = "";
+
+                return;
+            }
+
+
+            // ==============================
+            // LOGIN
+            // ==============================
+
+            const { data, error } =
+                await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+            if (error) {
+
+                message.textContent =
+                    error.message;
+
+                return;
+            }
+
+            message.textContent =
+                "Login successful!";
+
+            setTimeout(() => {
+
+                window.location.href = "index.html";
+
+            }, 800);
+        }
+
+    </script>
+
+</body>
+</html>

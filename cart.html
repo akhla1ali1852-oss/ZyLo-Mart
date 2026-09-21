@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZyLo | Cart</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script>
+    emailjs.init("v6Q6Gq1wJUZn5m03Q");
+</script>
+    <script>
+        const supabaseUrl = "https://ghgpuncmdupypxdfhibk.supabase.co";
+        const supabaseKey = "sb_publishable_wyPuvavd5bq6Fb8FgE_mFg_lszjv1Ld";
+        
+        const supabaseClient = window.supabase.createClient(
+        supabaseUrl,
+        supabaseKey
+    );
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #222;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .cart-box {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .cart-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #f5f5f5;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-info h3 {
+            margin: 0 0 10px;
+            font-size: 20px;
+        }
+
+        .item-price {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .quantity-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-box button {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #111;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .quantity-box span {
+            min-width: 25px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .remove-btn {
+            border: none;
+            background: #e53935;
+            color: white;
+            padding: 9px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .cart-bottom {
+            margin-top: 25px;
+            text-align: right;
+        }
+
+        .cart-total {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .checkout-btn {
+            border: none;
+            background: #111;
+            color: white;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 70px 20px;
+        }
+        .empty-cart-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+        .empty-cart h2 {
+            margin: 0 0 10px;
+            font-size: 26px;
+        }
+        .empty-cart p {
+            margin: 0;
+            color: #666;
+            font-size: 16px;
+        }
+
+        .continue-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 22px;
+            background: #111;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+        }
+
+        @media (max-width: 600px) {
+            .cart-item {
+                flex-wrap: wrap;
+            }
+
+            .cart-item img {
+                width: 80px;
+                height: 80px;
+            }
+
+            .item-info {
+                min-width: 200px;
+            }
+
+            .cart-bottom {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🛒 My Cart</h1>
+
+    <div class="cart-box">
+
+        <div id="cartItems"></div>
+
+        <div class="cart-bottom">
+            <div class="cart-total" id="cartTotal">
+                Total: ₹0
+            </div>
+
+            <button class="checkout-btn" onclick="checkout()">
+                Proceed to Checkout
+            </button>
+        </div>
+
+    </div>
+
+</div>
+<!-- ===== CHECKOUT MODAL ===== -->
+<div id="checkoutModal" style="
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+    z-index:9999;
+    overflow-y:auto;
+">
+
+    <div style="
+        background:white;
+        max-width:500px;
+        margin:40px auto;
+        padding:25px;
+        border-radius:12px;
+    ">
+
+        <h2 style="margin-top:0;">Checkout</h2>
+
+        <label>Full Name</label>
+        <input id="checkoutName" type="text"
+            placeholder="Enter your name"
+            style="width:100%; padding:12px; margin:7px 0 15px;">
+
+        <label>Phone Number</label>
+        <input id="checkoutPhone" type="tel"
+            maxlength="10"
+            placeholder="10-digit mobile number"
+            style="width:100%; padding:12px; margin:7px 0 15px;">
+
+        <label>Delivery Address</label>
+        <textarea id="checkoutAddress"
+            placeholder="Enter complete delivery address"
+            style="width:100%; padding:12px; margin:7px 0 15px; min-height:100px;"></textarea>
+
+        <label>Payment Method</label>
+        <select id="checkoutPayment"
+            style="width:100%; padding:12px; margin:7px 0 20px;">
+
+            <option value="">Select Payment Method</option>
+            <option value="Cash on Delivery">Cash on Delivery</option>
+        </select>
+
+        <div style="
+            display:flex;
+            gap:10px;
+        ">
+
+            <button onclick="closeCheckout()" style="
+                flex:1;
+                padding:13px;
+                border:none;
+                border-radius:7px;
+                background:#ddd;
+                cursor:pointer;
+            ">
+                Cancel
+            </button>
+
+            <button onclick="placeCartOrder()" style="
+                flex:1;
+                padding:13px;
+                border:none;
+                border-radius:7px;
+                background:#111;
+                color:white;
+                cursor:pointer;
+            ">
+                Place Order
+            </button>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+function getCart() {
+    return JSON.parse(localStorage.getItem("zyloCart")) || [];
+}
+
+
+function saveCart(cart) {
+    localStorage.setItem("zyloCart", JSON.stringify(cart));
+}
+
+
+function renderCart() {
+
+    const cartItems = document.getElementById("cartItems");
+    const cartTotal = document.getElementById("cartTotal");
+
+    const cart = getCart();
+
+    if (cart.length === 0) {
+
+        cartItems.innerHTML = `
+        <div class="empty-cart">
+            <div class="empty-cart-icon">🛒</div>
+                <h2>Your Cart is Empty</h2>
+                <p>Add some products to your cart and continue shopping.</p>
+                <a href="index.html" class="continue-btn">
+                    Continue Shopping
+                </a>
+        </div>
+        `;
+
+        cartTotal.textContent = "Total: ₹0";
+        return;
+    }
+
+    let total = 0;
+
+    cartItems.innerHTML = cart.map((item, index) => {
+
+        const itemTotal = item.price * item.quantity;
+
+        total += itemTotal;
+
+        return `
+            <div class="cart-item">
+
+                <img src="${item.image}" alt="${item.name}">
+
+                <div class="item-info">
+
+                    <h3>${item.name}</h3>
+
+                    <div class="item-price">
+                        ₹${item.price}
+                    </div>
+
+                    <div class="quantity-box">
+
+                        <button onclick="changeQuantity(${index}, -1)">
+                            −
+                        </button>
+
+                        <span>${item.quantity}</span>
+
+                        <button onclick="changeQuantity(${index}, 1)">
+                            +
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <button class="remove-btn" onclick="removeItem(${index})">
+                    Remove
+                </button>
+
+            </div>
+        `;
+
+    }).join("");
+
+    cartTotal.textContent = `Total: ₹${total}`;
+}
+
+
+function changeQuantity(index, change) {
+
+    const cart = getCart();
+
+    cart[index].quantity += change;
+
+    if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+    }
+
+    saveCart(cart);
+
+    renderCart();
+    window.dispatchEvent(new Event("cartUpdated"));
+}
+
+
+function removeItem(index) {
+
+    const cart = getCart();
+
+    cart.splice(index, 1);
+
+    saveCart(cart);
+
+    renderCart();
+
+    window.dispatchEvent(new Event("cartUpdated"));
+}
+
+
+function checkout() {
+
+    const cart = getCart();
+
+    if (cart.length === 0) {
+        alert("Cart empty hai.");
+        return;
+    }
+
+    document.getElementById("checkoutModal").style.display = "block";
+}
+
+
+function closeCheckout() {
+    document.getElementById("checkoutModal").style.display = "none";
+}
+
+// ding ding
+async function placeCartOrder() {
+
+    const name = document.getElementById("checkoutName").value.trim();
+    const phone = document.getElementById("checkoutPhone").value.trim();
+    const address = document.getElementById("checkoutAddress").value.trim();
+    const payment = document.getElementById("checkoutPayment").value;
+
+    const cart = getCart();
+
+    if (cart.length === 0) {
+        alert("Cart empty hai.");
+        return;
+    }
+
+    if (!name || !phone || !address || !payment) {
+        alert("Please fill all fields ❗");
+        return;
+    }
+
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+        alert("⚠️ Please enter a valid 10-digit mobile number!");
+        return;
+    }
+
+    const totalPrice = cart.reduce(
+        (total, item) => total + (item.price * item.quantity),
+        0
+    );
+
+    const totalQuantity = cart.reduce(
+        (total, item) => total + item.quantity,
+        0
+    );
+
+    const productNames = cart.map(
+        item => `${item.name} x ${item.quantity}`
+    ).join(", ");
+
+    try {
+
+        // ==============================
+        // 1. SAVE ORDER IN SUPABASE
+        // ==============================
+
+        const { data, error } = await supabaseClient
+            .from("orders")
+            .insert([
+                {
+                    customer_name: name,
+                    phone: phone,
+                    product_name: productNames,
+                    quantity: totalQuantity,
+                    price: totalPrice,
+                    total_price: totalPrice,
+                    payment_method: payment,
+                    address: address,
+                    status: "pending"
+                }
+            ]);
+
+        if (error) {
+            console.error("Supabase Order Error:", error);
+            throw new Error("Order database mein save nahi hua.");
+        }
+
+
+        // ==============================
+        // 2. SEND EMAIL
+        // ==============================
+
+        await emailjs.send(
+            "service_7u8bcaq",
+            "template_hvrqw6j",
+            {
+                from_name: name,
+                phone: phone,
+                quantity: totalQuantity,
+                payment: payment,
+                address: address,
+                product: productNames,
+                price: "₹" + totalPrice,
+                total_price: "₹" + totalPrice
+            }
+        );
+
+
+        // ==============================
+        // 3. SUCCESS
+        // ==============================
+
+        alert("✅ Order placed successfully!\n\nEmail notification bhi send ho gayi.");
+
+        localStorage.removeItem("zyloCart");
+
+        closeCheckout();
+
+        renderCart();
+
+    } catch (error) {
+
+        console.error("Cart Order Error:", error);
+
+        alert(
+            "❌ Order place nahi ho paya.\n\n" +
+            error.message
+        );
+    }
+}
+
+
+renderCart();
+
+</script>
+
+</body>
+</html>

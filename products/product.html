@@ -95,6 +95,24 @@
             font-weight: bold;
         }
 
+        .cart-btn {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #111;
+            border-radius: 8px;
+            background: white;
+            color: #111;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .cart-btn:hover {
+            background: #111;
+            color: white;
+        }
+
         .order-btn {
             width: 100%;
             padding: 15px;
@@ -108,6 +126,43 @@
 
         .order-btn:hover {
             opacity: 0.9;
+        }
+
+        .product-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .quantity-box {
+            display: flex;
+            align-items: center;
+            width: fit-content;
+            border: 2px solid #111;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .quantity-box button {
+            width: 45px;
+            height: 45px;
+            border: none;
+            background: #111;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .quantity-box button:hover {
+            background: #333;
+        }
+
+        .quantity-box span {
+            width: 50px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
         }
 
         .loading {
@@ -242,9 +297,15 @@
                     Stock checking...
                 </p>
 
-                <button class="order-btn" onclick="orderProduct()">
-                    Order Now
-                </button>
+                <div class="product-actions">
+                    <div class="quantity-box">
+                        <button type="button" onclick="decreaseQuantity()">−</button>
+                        <span id="productQuantity">1</span>
+                        <button type="button" onclick="increaseQuantity()">+</button>
+                    </div>
+                    <button class="cart-btn" onclick="addToCart()">Add to Cart</button>
+                    <button class="order-btn" onclick="orderProduct()">Order Now</button>
+                </div>
 
             </div>
 

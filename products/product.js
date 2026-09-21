@@ -6,6 +6,62 @@
 let orderProductName = "";
 let orderProductPrice = 0;
 
+function increaseQuantity() {
+    const quantity = document.getElementById("productQuantity");
+    quantity.textContent = parseInt(quantity.textContent) + 1;
+}
+
+function decreaseQuantity() {
+    const quantity = document.getElementById("productQuantity");
+
+    let current = parseInt(quantity.textContent);
+
+    if (current > 1) {
+        quantity.textContent = current - 1;
+    }
+}
+
+// ===== ADD TO CART =====
+function addToCart() {
+    const productId = new URLSearchParams(window.location.search).get("id");
+    const productName = document.getElementById("productName")?.textContent.trim();
+    const priceText = document.getElementById("productPrice")?.textContent.trim();
+    const image = document.getElementById("productImage")?.src;
+
+    if (!productId || !productName || !priceText) {
+        alert("Product information not found.");
+        return;
+    }
+
+    const price = parseFloat(priceText.replace(/[^\d.]/g, ""));
+
+    const selectedQuantity = parseInt(
+        document.getElementById("productQuantity")?.textContent || "1"
+    );
+
+    let cart = JSON.parse(localStorage.getItem("zyloCart")) || [];
+
+    const existingProduct = cart.find(item => item.id == productId);
+
+    if (existingProduct) {
+        existingProduct.quantity += selectedQuantity;
+    } else {
+        cart.push({
+            id: productId,
+            name: productName,
+            price: price,
+            image: image,
+            quantity: selectedQuantity
+        });
+    }
+
+    localStorage.setItem("zyloCart", JSON.stringify(cart));
+
+    window.dispatchEvent(new Event("cartUpdated"));
+
+    alert("Product has been added to your cart 🛒");
+}
+
 
 // ==========================================
 // EMAILJS LOAD
@@ -493,6 +549,11 @@ async function submitProductOrder() {
 
     try {
 
+        const { data: { session } } =
+            await supabaseClient.auth.getSession();
+            
+        const userId = session?.user?.id || null;
+
 
         // ==================================
         // 1. SAVE ORDER IN SUPABASE
@@ -504,6 +565,7 @@ async function submitProductOrder() {
             .insert([
 
                 {
+                    user_id: userId,
 
                     customer_name: name,
 
