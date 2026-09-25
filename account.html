@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Account | ZyLo Mart</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #111;
+        }
+
+        .navbar {
+            background: white;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .logo {
+            font-size: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #111;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .account-card {
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        .info-box {
+            background: #f7f7f7;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 7px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #111;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .logout-btn {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        #message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .nav-links {
+                gap: 12px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .container {
+                margin-top: 30px;
+            }
+
+            .account-card {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+
+        <h2 class="logo">ZyLo Mart</h2>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="my-orders.html">📦 My Orders</a>
+            <a href="cart.html">🛒 Cart</a>
+        </div>
+
+    </div>
+
+
+    <!-- ACCOUNT -->
+    <div class="container">
+
+        <div class="account-card">
+
+            <h1>👤 My Account</h1>
+
+            <div class="info-box">
+                <strong>Email</strong>
+                <span id="userEmail">Loading...</span>
+            </div>
+
+            <a href="my-orders.html" class="button">
+                📦 My Orders
+            </a>
+
+            <button
+                class="button logout-btn"
+                onclick="logoutUser()">
+                🚪 Logout
+            </button>
+
+            <div id="message"></div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // =========================
+        // SUPABASE
+        // =========================
+
+        const supabaseUrl =
+            "https://ghgpuncmdupypxdfhibk.supabase.co";
+
+        const supabaseKey =
+            "sb_publishable_wyPuvavd5bq6Fb8FgE_mFg_lszjv1Ld";
+
+        const supabaseClient =
+            window.supabase.createClient(
+                supabaseUrl,
+                supabaseKey
+            );
+
+
+        // =========================
+        // LOAD ACCOUNT
+        // =========================
+
+        async function loadAccount() {
+
+            const {
+                data: { user },
+                error
+            } = await supabaseClient.auth.getUser();
+
+
+            if (error || !user) {
+
+                window.location.href = "login.html";
+
+                return;
+            }
+
+
+            document.getElementById("userEmail").textContent =
+                user.email;
+        }
+
+
+        // =========================
+        // LOGOUT
+        // =========================
+
+        async function logoutUser() {
+
+            const { error } =
+                await supabaseClient.auth.signOut();
+
+
+            if (error) {
+
+                document.getElementById("message").textContent =
+                    "Logout failed. Please try again.";
+
+                return;
+            }
+
+
+            window.location.href = "index.html";
+        }
+
+
+        // START
+        loadAccount();
+
+    </script>
+
+</body>
+</html>

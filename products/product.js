@@ -559,6 +559,15 @@ async function submitProductOrder() {
         // 1. SAVE ORDER IN SUPABASE
         // ==================================
 
+        const {
+            data: { user }
+        } = await supabaseClient.auth.getUser();
+
+        if (!user) {
+            alert("Please login first.");
+            return;
+        }
+
         const { data, error } =
             await supabaseClient
             .from("orders")

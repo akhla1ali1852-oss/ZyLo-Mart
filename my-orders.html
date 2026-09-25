@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Orders | ZyLo Mart</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #111;
+        }
+
+        .navbar {
+            background: white;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .logo {
+            font-size: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #111;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        #loading {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .order-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .product-name {
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: #eee;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+
+        .status-progress {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            padding: 12px;
+            background: #f7f7f7;
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+
+        .status-step {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            font-size: 13px;
+            color: #999;
+            font-weight: bold;
+        }
+
+        .status-step.active {
+            color: #111;
+        }
+
+        .status-line {
+            width: 30px;
+            height: 2px;
+            background: #ddd;
+            flex-shrink: 0;
+        }
+
+        .status-line.active {
+            background: #111;
+        }
+
+        @media (max-width: 600px) {
+            .status-progress {
+                gap: 5px;
+            }
+
+            .status-step {
+                font-size: 11px;
+            }
+
+            .status-line {
+                width: 15px;
+            }
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            font-size: 15px;
+        }
+
+        .total {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .empty {
+            background: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 12px;
+        }
+
+        .empty h2 {
+            margin-bottom: 10px;
+        }
+
+        .empty a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #111;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+        }
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .nav-links {
+                gap: 12px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .container {
+                margin-top: 25px;
+            }
+
+            .order-top {
+                flex-direction: column;
+            }
+
+            .order-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+
+        <h2 class="logo">ZyLo Mart</h2>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="cart.html">🛒 Cart</a>
+            <a href="index.html">Shop</a>
+        </div>
+
+    </div>
+
+
+    <!-- MAIN -->
+    <div class="container">
+
+        <h1>📦 My Orders</h1>
+
+        <div id="loading">
+            Loading your orders...
+        </div>
+
+        <div id="ordersContainer"></div>
+
+    </div>
+
+
+    <script>
+
+        // =========================
+        // SUPABASE
+        // =========================
+
+        const supabaseUrl = "https://ghgpuncmdupypxdfhibk.supabase.co";
+
+        const supabaseKey =
+            "sb_publishable_wyPuvavd5bq6Fb8FgE_mFg_lszjv1Ld";
+
+        const supabaseClient =
+            window.supabase.createClient(
+                supabaseUrl,
+                supabaseKey
+            );
+        
+        
+        // =========================
+        // ORDER STATUS PROGRESS
+        // =========================
+
+        function getStatusProgress(status) {
+
+            const currentStatus = (status || "pending").toLowerCase();
+            const steps = [
+                { name: "Pending", icon: "🟡", key: "pending" },
+                { name: "Confirmed", icon: "🔵", key: "confirmed" },
+                { name: "Shipped", icon: "🚚", key: "shipped" },
+                { name: "Delivered", icon: "🟢", key: "delivered" }
+            ];
+
+            const currentIndex = steps.findIndex(
+                step => step.key === currentStatus
+            );
+
+            return `
+                <div class="status-progress">
+                    ${steps.map((step, index) => `
+                        <div class="status-step ${index <= currentIndex ? "active" : ""}">
+                            ${step.icon} ${step.name}
+                        </div>
+                        ${index < steps.length - 1 ? `
+                            <div class="status-line ${index < currentIndex ? "active" : ""}"></div>
+                        ` : ""}
+                    `).join("")}
+                </div>
+            `;
+        }
+
+
+        // =========================
+        // LOAD MY ORDERS
+        // =========================
+
+        async function loadMyOrders() {
+
+            const loading =
+                document.getElementById("loading");
+
+            const container =
+                document.getElementById("ordersContainer");
+
+
+            // Get logged-in user
+            const {
+                data: { user },
+                error: userError
+            } = await supabaseClient.auth.getUser();
+
+
+            // User not logged in
+            if (userError || !user) {
+
+                loading.innerHTML = `
+                    <div class="empty">
+                        <h2>Please Login First</h2>
+                        <p>You need to login to see your orders.</p>
+
+                        <a href="login.html">
+                            👤 Login
+                        </a>
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            // Get only this user's orders
+            const {
+                data: orders,
+                error
+            } = await supabaseClient
+                .from("orders")
+                .select("*")
+                .eq("user_id", user.id)
+                .order("created_at", {
+                    ascending: false
+                });
+
+
+            loading.style.display = "none";
+
+
+            // Error
+            if (error) {
+
+                console.error("Orders Error:", error);
+
+                container.innerHTML = `
+                    <div class="empty">
+                        <h2>Something went wrong</h2>
+                        <p>Unable to load your orders.</p>
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            // No orders
+            if (!orders || orders.length === 0) {
+
+                container.innerHTML = `
+                    <div class="empty">
+
+                        <h2>No Orders Yet 📦</h2>
+
+                        <p>
+                            You haven't placed any orders yet.
+                        </p>
+
+                        <a href="index.html">
+                            Continue Shopping
+                        </a>
+
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            // Display orders
+            container.innerHTML = "";
+
+
+            orders.forEach(order => {
+
+                const orderDate =
+                    new Date(order.created_at)
+                    .toLocaleString("en-IN");
+
+
+                const card =
+                    document.createElement("div");
+
+                card.className = "order-card";
+
+
+                card.innerHTML = `
+
+                    <div class="order-top">
+
+                        <div>
+
+                            <div class="product-name">
+                                ${order.product_name || "Product"}
+                            </div>
+
+                            <small>
+                                Order #${order.id}
+                            </small>
+
+                        </div>
+
+                        <div class="status">
+                            ${order.status || "pending"}
+                        </div>
+
+                        ${getStatusProgress(order.status)}
+
+                    </div>
+
+
+                    <div class="order-details">
+
+                        <div>
+                            <strong>Quantity:</strong>
+                            ${order.quantity || 1}
+                        </div>
+
+                        <div>
+                            <strong>Price:</strong>
+                            ₹${order.price || 0}
+                        </div>
+
+                        <div>
+                            <strong>Payment:</strong>
+                            ${order.payment_method || "N/A"}
+                        </div>
+
+                        <div>
+                            <strong>Order Date:</strong>
+                            ${orderDate}
+                        </div>
+
+                        <div>
+                            <strong>Customer:</strong>
+                            ${order.customer_name || "N/A"}
+                        </div>
+
+                        <div>
+                            <strong>Phone:</strong>
+                            ${order.phone || "N/A"}
+                        </div>
+
+                        <div>
+                            <strong>Address:</strong>
+                            ${order.address || "N/A"}
+                        </div>
+
+                    </div>
+
+
+                    <div class="total">
+
+                        Total:
+                        ₹${order.total_price || 0}
+
+                    </div>
+
+                `;
+
+
+                container.appendChild(card);
+
+            });
+
+        }
+
+
+        // Start
+        loadMyOrders();
+
+    </script>
+
+</body>
+</html>
