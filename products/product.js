@@ -385,7 +385,7 @@ function orderProduct() {
         document.getElementById("productPrice");
 
     const imageElement =
-        document.getElementById("mainProductImage");
+        document.getElementById("productImage");
 
 
     if (!nameElement || !priceElement) {
@@ -418,11 +418,11 @@ function orderProduct() {
 
     // Product image
 
-    if (imageElement) {
+    const orderImage = document.getElementById("orderProductImage");
 
-        document.getElementById("orderProductImage").src =
-            imageElement.src;
-
+    if (imageElement && orderImage) {
+        orderImage.src = imageElement.getAttribute("src");
+        orderImage.style.display = "block";
     }
 
 

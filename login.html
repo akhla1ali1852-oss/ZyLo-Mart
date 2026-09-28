@@ -70,6 +70,28 @@
             font-weight: bold;
             cursor: pointer;
         }
+        
+        #authButton {
+            margin-bottom: 12px;
+        }
+
+        .google-btn {
+            margin-top: 0;
+            background: white;
+            color: #111;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .google-icon {
+            font-size: 22px;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            color: #4285F4;
+        }
 
         button:hover {
             opacity: 0.9;
@@ -120,6 +142,10 @@
         <button onclick="handleAuth()" id="authButton">
             Login
         </button>
+        <button type="button" onclick="loginWithGoogle()" class="google-btn">
+            <span class="google-icon">G</span>
+            Continue with Google
+        </button>
 
         <p class="switch-text">
             <span id="switchLabel">Don't have an account?</span>
@@ -127,7 +153,6 @@
                 Sign Up
             </span>
         </p>
-
         <div id="message" class="message"></div>
 
     </div>
@@ -291,6 +316,18 @@
                 window.location.href = "index.html";
 
             }, 800);
+        }
+        async function loginWithGoogle() {
+
+            const { data, error } =
+                await supabaseClient.auth.signInWithOAuth({
+                    provider: "google"
+                });
+
+            if (error) {
+                console.error("Google Login Error:", error);
+                alert(error.message);
+            }
         }
 
     </script>
