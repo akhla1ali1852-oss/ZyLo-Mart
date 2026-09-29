@@ -23,40 +23,220 @@ h1 {
     border: 3px solid gray;
     margin-top: 20px;
 }
+/* ===== PRODUCT CARDS ===== */
+
 .products {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
     margin-top: 30px;
-    flex-wrap: wrap;
-    justify-content: center;
 }
+
 .card {
-    background-color: white;
-    border: 1px solid #ccc;
-    padding: 15px;
-    width: 260px;
-    border-radius: 15px;
-    text-align: center;
+    background: white;
+    border: 1px solid #ddd;
+    padding: 12px;
+    border-radius: 4px;
+    text-align: left;
+    box-sizing: border-box;
+    overflow: hidden;
 }
-.card img {
+
+.card:hover {
+    transform: translateY(-3px);
+    transition: 0.2s;
+}
+
+.product-link {
+    text-decoration: none;
+    color: #111;
+    display: block;
+}
+
+.product-image-box {
+    position: relative;
     width: 100%;
-    height: 260px;
-    object-fit: cover;
-    border-radius: 8px;
+    height: 250px;
+    overflow: hidden;
 }
-.free-card {
-    background-color: green;
+
+.product-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+/* Best Seller */
+
+.best-seller {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #159b9b;
     color: white;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 13px;
+    padding: 7px 12px;
+    font-size: 15px;
+    border-radius: 0 0 8px 0;
+}
+
+/* Discount */
+
+.discount-badge {
+    position: absolute;
+    bottom: 10px;
+    right: 8px;
+    background: #ff4b00;
+    color: white;
+    padding: 9px 12px;
+    border-radius: 7px;
+    font-size: 17px;
     font-weight: bold;
-    display: inline-block;
+}
+
+/* Heart + Eye */
+
+.card-icons {
+    position: absolute;
+    right: 8px;
+    top: 45px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #ed1c24;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+}
+
+/* Price */
+
+.card-price {
+    margin-top: 15px;
+}
+
+.card-price .offer-price {
+    color: #e51b23;
+    font-size: 27px;
+    font-weight: bold;
+}
+
+.card-price .old-price {
+    color: #666;
+    font-size: 19px;
+    text-decoration: line-through;
+    margin-left: 7px;
+}
+
+/* Rating */
+
+.card-rating {
+    color: #f5a000;
+    font-size: 22px;
+    margin-top: 12px;
+    letter-spacing: 2px;
+}
+
+/* Product Name */
+
+.card-name {
+    font-size: 19px;
+    line-height: 1.35;
+    margin: 10px 0;
+    height: 52px;
+    overflow: hidden;
+}
+
+/* Add To Cart */
+
+.card-add-btn {
+    width: 100%;
+    padding: 13px;
+    background: #ef3038;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
     margin-top: 8px;
 }
-.card:hover {
-    transform: scale(1.05);
-    transition: 0.3s;
+
+.card-add-btn:hover {
+    background: #d9232a;
+}
+
+
+/* ===== MOBILE ===== */
+
+@media (max-width: 768px) {
+
+    .products {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding: 0 10px;
+    }
+
+    .card {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .product-image-box {
+        height: 180px;
+    }
+
+    .best-seller {
+        font-size: 14px;
+        padding: 6px 9px;
+    }
+
+    .card-icons {
+        right: 6px;
+        top: 35px;
+        gap: 7px;
+    }
+
+    .card-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 21px;
+    }
+
+    .discount-badge {
+        font-size: 15px;
+        padding: 7px 9px;
+    }
+
+    .card-price .offer-price {
+        font-size: 22px;
+    }
+
+    .card-price .old-price {
+        font-size: 15px;
+    }
+
+    .card-rating {
+        font-size: 18px;
+    }
+
+    .card-name {
+        font-size: 16px;
+        height: 45px;
+    }
+
+    .card-add-btn {
+        font-size: 15px;
+        padding: 11px 5px;
+    }
 }
 .categories {
     margin-top: 25px;
@@ -599,12 +779,6 @@ gtag('config', 'G-490MKJZKP7');
     class="search"
     onkeyup="searchProducts()">
 
-<div class="categories">
-    <button onclick="comingSoon()">👕 Fashion</button>
-    <button onclick="comingSoon()">💍 Jewellery</button>
-    <button>🧑‍🍳 KitchenItems</button>
-    <button onclick="comingSoon()">🎧 Electronics</button>
-</div>
 <div class="products"></div>
 
 <script>
@@ -626,6 +800,43 @@ function updateCartCount() {
 
 updateCartCount();
 window.addEventListener("cartUpdated", updateCartCount);
+
+// ===== HOME ADD TO CART =====
+function addHomeToCart(productId) {
+
+    const product = window.homeProducts?.find(
+        item => item.id == productId
+    );
+
+    if (!product) {
+        alert("Product not found.");
+        return;
+    }
+
+    let cart = JSON.parse(localStorage.getItem("zyloCart")) || [];
+
+    const existingProduct = cart.find(
+        item => item.id == productId
+    );
+
+    if (existingProduct) {
+        existingProduct.quantity += 1;
+    } else {
+        cart.push({
+            id: product.id,
+            name: product.name,
+            price: Number(product.price),
+            image: product.image,
+            quantity: 1
+        });
+    }
+
+    localStorage.setItem("zyloCart", JSON.stringify(cart));
+
+    window.dispatchEvent(new Event("cartUpdated"));
+
+    alert("Product has been added to your cart 🛒");
+}
 
 // ===== LOGIN STATUS =====
 
@@ -749,6 +960,7 @@ async function testSupabase() {
     }
 
     console.log("Supabase Products:", data);
+    window.homeProducts = data;
 
     const productsContainer = document.querySelector(".products");
     productsContainer.innerHTML = "";
@@ -759,15 +971,67 @@ async function testSupabase() {
 
         card.innerHTML = `
             <a href="products/product.html?id=${product.id}" class="product-link">
-                <img src="${product.image}" alt="${product.name}">
-                
-                <p>${product.name}</p>
 
-                <div class="price-box">
-                    <span class="offer-price">₹${product.price}</span>
+                <div class="product-image-box">
+
+                    <img src="${product.image}" alt="${product.name}">
+
+                    <span class="best-seller">
+                        Best Seller
+                    </span>
+
+                    <div class="card-icons">
+                        <span class="card-icon">♡</span>
+                        <span class="card-icon">◉</span>
+                    </div>
+
+                    ${
+                        product.mrp && Number(product.mrp) > Number(product.price)
+                        ? `
+                            <span class="discount-badge">
+                                ${Math.round(
+                                    ((Number(product.mrp) - Number(product.price)) /
+                                    Number(product.mrp)) * 100
+                                )}% OFF
+                            </span>
+                        `
+                        : ""
+                    }
+
                 </div>
 
-                <p class="tax-text">Inclusive of all taxes</p>
+                <div class="card-price">
+
+                    <span class="offer-price">
+                        ₹${product.price}
+                    </span>
+
+                    ${
+                        product.mrp && Number(product.mrp) > Number(product.price)
+                        ? `
+                            <span class="old-price">
+                                ₹${product.mrp}
+                            </span>
+                        `
+                        : ""
+                    }
+
+                </div>
+
+                <div class="card-rating">
+                    ★★★★☆
+                </div>
+
+                <div class="card-name">
+                    ${product.name}
+                </div>
+
+                <button
+                    class="card-add-btn"
+                    onclick="event.preventDefault(); addHomeToCart(${product.id})">
+                    ADD TO CART
+                </button>
+
             </a>
         `;
 

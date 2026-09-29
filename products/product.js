@@ -667,10 +667,106 @@ async function submitProductOrder() {
 
         closeProductOrder();
 
+        const successPopup = document.createElement("div");
 
-        alert(
-            "✅ Order placed successfully!"
-        );
+        successPopup.id = "orderSuccessPopup";
+
+        successPopup.innerHTML = `
+            <div class="success-popup-box">
+
+                <div class="success-icon">✓</div>
+
+                    <h2>Order Successful!</h2>
+
+                    <p>Your order has been placed successfully.</p>
+
+                    <p class="success-contact">
+                        Order update ya kisi bhi help ke liye<br>
+                        contact karein:
+                    </p>
+
+                    <strong>📞 +91 9532499285</strong>
+
+                    <button onclick="document.getElementById('orderSuccessPopup').remove()">
+                        Continue Shopping
+                    </button>
+
+            </div>
+        `;
+
+        document.body.appendChild(successPopup);
+
+        const successStyle = document.createElement("style");
+
+        successStyle.innerHTML = `
+            #orderSuccessPopup {
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.65);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999999;
+                padding: 20px;
+            }
+
+            .success-popup-box {
+                background: white;
+                width: 100%;
+                max-width: 380px;
+                padding: 30px 25px;
+                border-radius: 20px;
+                text-align: center;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            }
+
+            .success-icon {
+                width: 65px;
+                height: 65px;
+                margin: 0 auto 15px;
+                border-radius: 50%;
+                background: #16a34a;
+                color: white;
+                font-size: 42px;
+                line-height: 65px;
+                font-weight: bold;
+            }
+
+            .success-popup-box h2 {
+                margin: 10px 0;
+                font-size: 26px;
+            }
+
+            .success-popup-box p {
+                color: #555;
+                font-size: 15px;
+                line-height: 1.6;
+            }
+
+            .success-contact {
+                margin-top: 18px;
+                margin-bottom: 5px;
+            }
+
+            .success-popup-box strong {
+                font-size: 18px;
+            }
+
+            .success-popup-box button {
+                width: 100%;
+                margin-top: 22px;
+                padding: 13px;
+                border: none;
+                border-radius: 10px;
+                background: #111;
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+        `;
+
+        document.head.appendChild(successStyle);
 
 
         // Clear form
