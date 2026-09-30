@@ -681,6 +681,55 @@ font-size:12px;
 }
 
 }
+/* ===== MOBILE BOTTOM NAV ===== */
+
+.mobile-bottom-nav {
+    display: none;
+}
+
+@media (max-width: 768px) {
+
+    .mobile-bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 72px;
+        background: white;
+        border-top: 1px solid #ddd;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 99999;
+        box-shadow: 0 -3px 15px rgba(0,0,0,0.08);
+    }
+
+    .mobile-bottom-nav a {
+        text-decoration: none;
+        color: #111;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 500;
+        gap: 4px;
+    }
+
+    .mobile-bottom-icon {
+        font-size: 27px;
+        line-height: 1;
+    }
+
+    .mobile-cart-count {
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    body {
+        padding-bottom: 85px;
+    }
+}
 
     </style>
     <!-- EmailJS Connect -->
@@ -730,7 +779,7 @@ gtag('config', 'G-490MKJZKP7');
         <span id="authNav">
             <a href="account.html">👤 Account</a>
         </span>
-        <a href="my-orders.html">My Orders</a>
+        
     </div>
 </div>
 
@@ -770,9 +819,15 @@ function updateCartCount() {
     );
 
     const cartCount = document.getElementById("cartCount");
+    const mobileCartCount = document.getElementById("mobileCartCount");
 
     if (cartCount) {
         cartCount.textContent = totalItems;
+    }
+
+
+    if (mobileCartCount) {
+        mobileCartCount.textContent = totalItems;
     }
 }
 
@@ -957,11 +1012,6 @@ async function testSupabase() {
                     <span class="best-seller">
                         Best Seller
                     </span>
-
-                    <div class="card-icons">
-                        <span class="card-icon">♡</span>
-                        <span class="card-icon">◉</span>
-                    </div>
 
                     ${
                         product.mrp && Number(product.mrp) > Number(product.price)
@@ -1159,5 +1209,25 @@ async function logoutUser() {
 
 checkLoginStatus();
 </script>
+<!-- ===== MOBILE BOTTOM NAV ===== -->
+
+<div class="mobile-bottom-nav">
+
+    <a href="index.html">
+        <span class="mobile-bottom-icon">⌂</span>
+        <span>Home</span>
+    </a>
+
+    <a href="cart.html">
+        <span class="mobile-bottom-icon">🛒</span>
+        <span>Cart (<span id="mobileCartCount">0</span>)</span>
+    </a>
+
+    <a href="account.html">
+        <span class="mobile-bottom-icon">♙</span>
+        <span>Account</span>
+    </a>
+
+</div>
 </body>
 </html>
