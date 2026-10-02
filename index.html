@@ -344,30 +344,23 @@ h1 {
     margin-top: -10px;
 }
 @media (max-width: 600px) {
-    .banner {
-        height: 220px;
-        padding-left: 20px;
-    }
-    .banner-text h1 {
-        font-size: 20px;
-        padding: 0;
-        margin: 0;
-    }
-    .banner-text p {
-        font-size: 13px;
-        letter-spacing: 1px;
-        margin-top: 5px;
 
+    .banner {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 10;
+        padding: 0;
+        margin-top: 20px;
+        background-size: 100% 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        border-radius: 15px;
     }
-    .navbar {
-        flex-direction: column;
-        text-align: center;
+
+    .banner-text {
+        display: none;
     }
-    .nav-links a {
-        display: inline-block;
-        margin: 10px;
-    }
-    
+
 }
 
 .image-slider {
@@ -730,6 +723,14 @@ font-size:12px;
         padding-bottom: 85px;
     }
 }
+@media (max-width: 768px) {
+
+    .nav-links a[href="cart.html"],
+    #authNav {
+        display: none;
+    }
+
+}
 
     </style>
     <!-- EmailJS Connect -->
@@ -925,7 +926,9 @@ document.addEventListener("click", function(event) {
 var bannerImages = [
     "images/banner.png",
     "images/banner2.png",
-    "images/banner3.png"
+    "images/banner3.png",
+    "images/banner4.png",
+    "images/banner5.png"
 ];
 
 var bannerIndex = 0;
