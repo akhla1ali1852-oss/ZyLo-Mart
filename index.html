@@ -725,9 +725,12 @@ font-size:12px;
 }
 @media (max-width: 768px) {
 
-    .nav-links a[href="cart.html"],
+    .nav-links > a[href="cart.html"] {
+        display: none !important;
+    }
+
     #authNav {
-        display: none;
+        display: none !important;
     }
 
 }
