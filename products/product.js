@@ -57,6 +57,22 @@ function addToCart() {
 
     localStorage.setItem("zyloCart", JSON.stringify(cart));
 
+    // ===== GOOGLE ANALYTICS ADD TO CART =====
+    if (typeof gtag === "function") {
+        gtag("event", "add_to_cart", {
+            currency: "INR",
+            value: price * selectedQuantity,
+            items: [
+                {
+                    item_id: productId,
+                    item_name: productName,
+                    price: price,
+                    quantity: selectedQuantity
+                }
+            ]
+        });
+    }
+
     window.dispatchEvent(new Event("cartUpdated"));
 
     alert("Product has been added to your cart 🛒");
@@ -664,6 +680,23 @@ async function submitProductOrder() {
         // ==================================
         // SUCCESS
         // ==================================
+
+        // ===== GOOGLE ANALYTICS PURCHASE =====
+        if (typeof gtag === "function") {
+            gtag("event", "purchase", {
+                transaction_id: "ZYLO-" + Date.now(),
+                value: totalPrice,
+                currency: "INR",
+                items: [
+                    {
+                        item_id: new URLSearchParams(window.location.search).get("id") || "",
+                        item_name: orderProductName,
+                        price: price,
+                        quantity: quantity
+                    }
+                ]
+            });
+        }
 
         closeProductOrder();
 
