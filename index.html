@@ -732,6 +732,10 @@ font-size:12px;
         display: none !important;
     }
 
+    #cartNav {
+        display: none !important;
+    }
+
 }
 
     </style>
@@ -777,7 +781,10 @@ gtag('config', 'G-490MKJZKP7');
     <div class="nav-links">
         <a href="#">Home</a>
         <a href="#" onclick="openContact()">Contact</a>
-        <a href="cart.html">🛒 Cart (<span id="cartCount">0</span>)</a>
+        <span id="cartNav">
+            <a href="cart.html">🛒 Cart (<span id="cartCount">0</span>)</a>
+        </span>
+        
         <span id="authNav">
             <a href="account.html">👤 Account</a>
         </span>
