@@ -737,6 +737,107 @@ font-size:12px;
     }
 
 }
+/* ===== MOBILE NAVBAR + H1 UPDATE ===== */
+
+@media (max-width: 768px) {
+
+    /* Navbar */
+    .navbar {
+        padding: 14px 16px;
+        border-radius: 22px;
+        gap: 10px;
+    }
+
+    .logo {
+        font-size: 24px;
+        letter-spacing: 1px;
+        white-space: nowrap;
+    }
+
+    .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        white-space: nowrap;
+    }
+
+    .nav-links a {
+        margin-left: 0;
+        font-size: 16px;
+    }
+
+    /* Main Heading */
+    h1 {
+        font-size: 28px;
+        line-height: 1.15;
+        padding: 12px 10px;
+        margin: 25px 0 10px;
+        white-space: nowrap;
+    }
+
+}
+/* ===== ZM BRAND LOGO ===== */
+
+.brand-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.zm-logo {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: white;
+    color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: bold;
+    letter-spacing: -1px;
+    flex-shrink: 0;
+}
+
+
+/* ===== MOBILE NAVBAR ===== */
+
+@media (max-width: 768px) {
+
+    .navbar {
+        padding: 12px 14px;
+        border-radius: 22px;
+    }
+
+    .brand-area {
+        gap: 9px;
+    }
+
+    .zm-logo {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .logo {
+        font-size: 22px;
+        letter-spacing: 1px;
+        white-space: nowrap;
+    }
+
+    .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        white-space: nowrap;
+    }
+
+    .nav-links a {
+        margin-left: 0;
+        font-size: 15px;
+    }
+
+}
 
     </style>
     <!-- EmailJS Connect -->
@@ -776,20 +877,32 @@ gtag('config', 'G-490MKJZKP7');
     </div>
 
 <div class="navbar">
-    <h2 class="logo">ZyLo Mart</h2>
+
+    <div class="brand-area">
+        <div class="zm-logo">ZM</div>
+        <h2 class="logo">ZyLo Mart</h2>
+    </div>
 
     <div class="nav-links">
         <a href="#">Home</a>
-        <a href="#" onclick="openContact()">Contact</a>
+
+        <a href="#" onclick="openContact()">
+            Contact
+        </a>
+
         <span id="cartNav">
-            <a href="cart.html">🛒 Cart (<span id="cartCount">0</span>)</a>
+            <a href="cart.html">
+                🛒 Cart (<span id="cartCount">0</span>)
+            </a>
         </span>
-        
+
         <span id="authNav">
-            <a href="account.html">👤 Account</a>
+            <a href="account.html">
+                👤 Account
+            </a>
         </span>
-        
     </div>
+
 </div>
 
 <h1><b>Lucknow Market.Place</b></h1>
