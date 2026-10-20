@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZyLo | Jewellery Collection</title>
+
+<style>
+:root {
+    --cream: #fbf7f0;
+    --white: #ffffff;
+    --gold: #b18a45;
+    --dark: #29231d;
+    --muted: #77716a;
+    --border: #e9e0d4;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding-bottom: 20px;
+    background: var(--white);
+    color: var(--dark);
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+a {
+    color: inherit;
+}
+
+button, input {
+    font: inherit;
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    min-height: 76px;
+    padding: 14px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    background: rgba(255,255,255,0.97);
+    border-bottom: 1px solid var(--border);
+}
+
+.brand-area {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    flex-shrink: 0;
+}
+
+.zm-logo {
+    width: 43px;
+    height: 43px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    color: var(--gold);
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.logo {
+    margin: 0;
+    color: var(--dark);
+    font-family: Georgia, serif;
+    font-size: 27px;
+    letter-spacing: 1px;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    font-size: 14px;
+    color: var(--dark);
+}
+
+.nav-links a:hover {
+    color: var(--gold);
+}
+
+.collection-hero {
+    padding: 48px 20px 30px;
+    text-align: center;
+    background: var(--cream);
+}
+
+.eyebrow {
+    margin: 0 0 12px;
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+.collection-hero h1 {
+    margin: 0;
+    font-family: Georgia, serif;
+    font-size: clamp(30px, 4vw, 48px);
+    font-weight: normal;
+    letter-spacing: 0.5px;
+}
+
+.collection-hero p {
+    max-width: 520px;
+    margin: 14px auto 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.banner {
+    width: 100%;
+    aspect-ratio: 16 / 5;
+    min-height: 180px;
+    max-height: 390px;
+    background-color: var(--cream);
+    background-image: url('images/banner.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.products-area {
+    width: 100%;
+    max-width: 1500px;
+    padding: 32px 4%;
+    margin: auto;
+}
+
+.section-heading {
+    margin: 0 0 8px;
+    font-family: Georgia, serif;
+    font-size: 29px;
+    font-weight: normal;
+}
+
+.section-subtitle {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.search-wrap {
+    margin: 24px 0;
+}
+
+.search {
+    width: 100%;
+    max-width: 460px;
+    padding: 14px 17px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    outline: none;
+    background: #fff;
+    font-size: 14px;
+}
+
+.search:focus {
+    border-color: var(--gold);
+}
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 25px 18px;
+    margin-top: 25px;
+}
+
+.card {
+    min-width: 0;
+    padding: 0 0 15px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #eee7df;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 22px rgba(50,35,15,0.08);
+}
+
+.product-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.product-image-box {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 4.5;
+    overflow: hidden;
+    background: var(--cream);
+}
+
+.product-image-box img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s;
+}
+
+.card:hover .product-image-box img {
+    transform: scale(1.035);
+}
+
+.best-seller {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 6px 9px;
+    background: #fff;
+    color: #70582e;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.discount-badge {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    padding: 6px 8px;
+    background: #8b332d;
+    color: #fff;
+    font-size: 11px;
+}
+
+.card-price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 7px;
+    padding: 13px 12px 0;
+}
+
+.offer-price {
+    color: var(--dark);
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.old-price {
+    color: #999;
+    font-size: 12px;
+    text-decoration: line-through;
+}
+
+.card-rating {
+    padding: 8px 12px 0;
+    color: var(--gold);
+    font-size: 13px;
+    letter-spacing: 1px;
+}
+
+.card-name {
+    height: auto;
+    min-height: 40px;
+    margin: 7px 12px 12px;
+    overflow: hidden;
+    color: #39322a;
+    font-family: Georgia, serif;
+    font-size: 15px;
+    line-height: 1.45;
+}
+
+.card-add-btn {
+    display: block;
+    width: calc(100% - 24px);
+    margin: 0 12px;
+    padding: 12px 6px;
+    border: 1px solid var(--dark);
+    border-radius: 0;
+    background: var(--dark);
+    color: white;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: background 0.2s;
+}
+
+.card-add-btn:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+}
+
+.empty-message {
+    padding: 35px 10px;
+    color: var(--muted);
+    text-align: center;
+    grid-column: 1 / -1;
+}
+
+.trust-section {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    margin: 20px 4% 40px;
+    border: 1px solid var(--border);
+    background: var(--border);
+}
+
+.trust-card {
+    padding: 22px 10px;
+    background: var(--cream);
+    text-align: center;
+}
+
+.trust-card span {
+    font-size: 25px;
+}
+
+.trust-card h3 {
+    margin: 10px 0 6px;
+    font-family: Georgia, serif;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.trust-card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.about-section {
+    padding: 35px 20px;
+    background: var(--cream);
+    text-align: center;
+}
+
+.about-section h2 {
+    margin: 0 0 12px;
+    font-family: Georgia, serif;
+    font-weight: normal;
+}
+
+.about-section p {
+    max-width: 720px;
+    margin: auto;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+footer {
+    padding: 25px 15px;
+    background: var(--dark);
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.mobile-bottom-nav {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .products {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px 12px;
+    }
+
+    .navbar {
+        padding-left: 3%;
+        padding-right: 3%;
+    }
+
+    .nav-links {
+        gap: 14px;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        padding-bottom: 80px;
+    }
+
+    .navbar {
+        position: relative;
+        min-height: 65px;
+        padding: 11px 13px;
+        gap: 8px;
+    }
+
+    .zm-logo {
+        width: 35px;
+        height: 35px;
+        font-size: 12px;
+    }
+
+    .brand-area {
+        gap: 7px;
+    }
+
+    .logo {
+        font-size: 20px;
+        letter-spacing: 0;
+    }
+
+    .nav-links {
+        gap: 12px;
+    }
+
+    .nav-links a {
+        font-size: 12px;
+    }
+
+    .collection-hero {
+        padding: 30px 17px 24px;
+    }
+
+    .eyebrow {
+        font-size: 9px;
+        letter-spacing: 3px;
+    }
+
+    .collection-hero h1 {
+        font-size: 31px;
+        line-height: 1.2;
+    }
+
+    .collection-hero p {
+        font-size: 12px;
+    }
+
+    .banner {
+        aspect-ratio: 16 / 9;
+        min-height: 0;
+    }
+
+    .products-area {
+        padding: 25px 12px;
+    }
+
+    .section-heading {
+        font-size: 25px;
+    }
+
+    .search-wrap {
+        margin: 18px 0;
+    }
+
+    .search {
+        max-width: none;
+        padding: 13px;
+    }
+
+    .products {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px 10px;
+        margin-top: 18px;
+    }
+
+    .card {
+        padding-bottom: 12px;
+    }
+
+    .product-image-box {
+        aspect-ratio: 4 / 4.7;
+    }
+
+    .best-seller {
+        top: 6px;
+        left: 6px;
+        padding: 5px 6px;
+        font-size: 8px;
+    }
+
+    .discount-badge {
+        right: 5px;
+        bottom: 5px;
+        padding: 5px 6px;
+        font-size: 9px;
+    }
+
+    .card-price {
+        gap: 5px;
+        padding: 10px 8px 0;
+    }
+
+    .offer-price {
+        font-size: 15px;
+    }
+
+    .old-price {
+        font-size: 10px;
+    }
+
+    .card-rating {
+        padding: 6px 8px 0;
+        font-size: 11px;
+    }
+
+    .card-name {
+        min-height: 38px;
+        margin: 6px 8px 10px;
+        font-size: 13px;
+    }
+
+    .card-add-btn {
+        width: calc(100% - 16px);
+        margin: 0 8px;
+        padding: 11px 3px;
+        font-size: 10px;
+        letter-spacing: 0.5px;
+    }
+
+    .trust-section {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin: 15px 12px 25px;
+    }
+
+    .trust-card {
+        padding: 17px 8px;
+    }
+
+    .mobile-bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 2000;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        width: 100%;
+        height: 70px;
+        border-top: 1px solid var(--border);
+        background: white;
+    }
+
+    .mobile-bottom-nav a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        color: var(--dark);
+        font-size: 11px;
+        text-decoration: none;
+    }
+
+    .mobile-bottom-icon {
+        font-size: 23px;
+        line-height: 1;
+    }
+}
+</style>
+
+<!-- Existing services -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+(function () {
+    emailjs.init("v6Q6Gq1wJUZn5m03Q");
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const supabaseUrl = "https://ghgpuncmdupypxdfhibk.supabase.co";
+const supabaseKey = "sb_publishable_wyPuvavd5bq6Fb8FgE_mFg_lszjv1Ld";
+
+const supabaseClient = window.supabase.createClient(
+    supabaseUrl,
+    supabaseKey
+);
+</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-490MKJZKP7"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-490MKJZKP7');
+</script>
+</head>
+<body>
+
+
+<!-- Navigation -->
+<div class="navbar">
+    <div class="brand-area">
+        <div class="zm-logo">ZM</div>
+        <h2 class="logo">ZyLo</h2>
+    </div>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+
+        <a href="#" onclick="openContact(); return false;">
+            Contact
+        </a>
+
+        <span id="cartNav">
+            <a href="cart.html">
+                🛒 Cart (<span id="cartCount">0</span>)
+            </a>
+        </span>
+
+        <span id="authNav">
+            <a id="loginLink" href="login.html">👤 Login</a>
+        </span>
+    </div>
+</div>
+
+<!-- Jewellery heading -->
+<section class="collection-hero">
+    <p class="eyebrow">THE ZYLO COLLECTION</p>
+
+    <h1>Discover Your Everyday Elegance</h1>
+
+    <p>
+        Explore jewellery that adds a special touch to every moment.
+        Find your next favourite piece with ZyLo.
+    </p>
+</section>
+
+
+<!-- Products -->
+<main class="products-area">
+    <h2 class="section-heading">Our Jewellery Collection</h2>
+
+    <p class="section-subtitle">
+        Discover pieces selected just for you.
+    </p>
+
+    <div class="search-wrap">
+        <input
+            type="text"
+            placeholder="Search jewellery..."
+            class="search"
+            onkeyup="searchProducts()"
+            aria-label="Search products"
+        >
+    </div>
+
+    <div class="products">
+        <p class="empty-message">Loading products...</p>
+    </div>
+</main>
+
+<!-- Contact popup -->
+<div id="contactPopup" style="
+display:none;
+position:fixed;
+inset:0;
+z-index:5000;
+background:rgba(0,0,0,.6);
+align-items:center;
+justify-content:center;
+padding:20px;
+">
+    <div style="
+    position:relative;
+    width:100%;
+    max-width:360px;
+    padding:28px 22px;
+    background:white;
+    text-align:center;
+    border:1px solid #e9e0d4;
+    ">
+        <button
+            onclick="closeContact()"
+            aria-label="Close contact window"
+            style="
+            position:absolute;
+            top:8px;
+            right:12px;
+            border:0;
+            background:none;
+            font-size:25px;
+            cursor:pointer;
+        ">&times;</button>
+
+        <h2 style="font-family:Georgia,serif;font-weight:normal;">
+            Contact ZyLo
+        </h2>
+
+        <p>📞 Phone: +91 9532499285</p>
+
+        <p>📧 Email: officialzylo01@gmail.com</p>
+
+        <p>🕒 Support Time: 10 AM - 7 PM</p>
+
+        <a
+            href="https://wa.me/919532499285"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="
+            display:inline-block;
+            margin-top:10px;
+            padding:12px 20px;
+            background:#25D366;
+            color:white;
+            text-decoration:none;
+        ">
+            WhatsApp Chat
+        </a>
+    </div>
+</div>
+
+<!-- Trust section -->
+<section class="trust-section">
+    <div class="trust-card">
+        <span>🚚</span>
+        <h3>Delivery</h3>
+        <p>Delivery details available at checkout</p>
+    </div>
+
+    <div class="trust-card">
+        <span>🔒</span>
+        <h3>Secure Orders</h3>
+        <p>Shop through our ordering process</p>
+    </div>
+
+    <div class="trust-card">
+        <span>💬</span>
+        <h3>Customer Support</h3>
+        <p>Contact us when you need help</p>
+    </div>
+
+    <div class="trust-card">
+        <span>✨</span>
+        <h3>Our Collection</h3>
+        <p>Explore jewellery on ZyLo</p>
+    </div>
+</section>
+
+<!-- About ZyLo -->
+<section class="about-section">
+    <h2>Welcome to ZyLo</h2>
+
+    <p>
+        Discover jewellery for everyday wear and special occasions.
+        Browse our collection, explore product details, and choose
+        the pieces you love. Our goal is to make finding your next
+        favourite accessory simple and enjoyable.
+    </p>
+</section>
+
+<!-- Footer -->
+<footer>
+    <p>© 2026 ZyLo. All Rights Reserved.</p>
+    <p>Contact: officialzylo01@gmail.com</p>
+</footer>
+
+<!-- Mobile bottom navigation -->
+<div class="mobile-bottom-nav">
+    <a href="index.html">
+        <span class="mobile-bottom-icon">⌂</span>
+        <span>Home</span>
+    </a>
+
+    <a href="cart.html">
+        <span class="mobile-bottom-icon">🛒</span>
+        <span>Cart (<span id="mobileCartCount">0</span>)</span>
+    </a>
+
+    <a href="account.html">
+        <span class="mobile-bottom-icon">♙</span>
+        <span>Account</span>
+    </a>
+</div>
+
+<script>
+/* ===============================
+   ZYLO JEWELLERY - MAIN JAVASCRIPT
+================================ */
+
+// 1. CART COUNT UPDATE
+function updateCartCount() {
+    let cart = [];
+
+    try {
+        cart = JSON.parse(localStorage.getItem("zyloCart")) || [];
+    } catch (error) {
+        cart = [];
+    }
+
+    const count = cart.reduce(
+        (total, item) => total + (Number(item.quantity) || 1),
+        0
+    );
+
+    const desktopCount = document.getElementById("cartCount");
+    const mobileCount = document.getElementById("mobileCartCount");
+
+    if (desktopCount) desktopCount.textContent = count;
+    if (mobileCount) mobileCount.textContent = count;
+}
+
+
+// 2. ADD PRODUCT TO CART
+function addHomeToCart(productId) {
+    const products = window.homeProducts || [];
+
+    const product = products.find(
+        item => String(item.id) === String(productId)
+    );
+
+    if (!product) {
+        alert("Product nahi mila. Please page refresh karke try karo.");
+        return;
+    }
+
+    let cart = [];
+
+    try {
+        cart = JSON.parse(localStorage.getItem("zyloCart")) || [];
+    } catch (error) {
+        cart = [];
+    }
+
+    const existingItem = cart.find(
+        item => String(item.id) === String(product.id)
+    );
+
+    if (existingItem) {
+        existingItem.quantity = (Number(existingItem.quantity) || 1) + 1;
+    } else {
+        cart.push({
+            id: product.id,
+            name: product.name,
+            price: Number(product.price) || 0,
+            image: product.image || "",
+            quantity: 1
+        });
+    }
+
+    localStorage.setItem("zyloCart", JSON.stringify(cart));
+    updateCartCount();
+
+    alert("Product cart mein add ho gaya!");
+}
+
+
+// 3. ACCOUNT / LOGIN NAVIGATION
+async function updateAuthNav() {
+    const loginLink = document.getElementById("loginLink");
+    if (!loginLink) return;
+
+    try {
+        const { data, error } = await supabaseClient.auth.getUser();
+
+        if (error) throw error;
+
+        if (data.user) {
+            loginLink.textContent = "Account";
+            loginLink.href = "account.html";
+            loginLink.onclick = null;
+        } else {
+            loginLink.textContent = "Login";
+            loginLink.href = "login.html";
+            loginLink.onclick = null;
+        }
+    } catch (error) {
+        console.error("Login status error:", error);
+        loginLink.textContent = "Login";
+        loginLink.href = "login.html";
+    }
+}
+
+
+// Update navigation when login/logout happens
+supabaseClient.auth.onAuthStateChange(() => {
+    updateAuthNav();
+});
+
+
+// 4. SEARCH PRODUCTS
+function searchProducts() {
+    const searchInput = document.querySelector(".search");
+    const searchTerm = (searchInput?.value || "").trim().toLowerCase();
+
+    const cards = document.querySelectorAll(".products .card");
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+        const productName =
+            card.querySelector(".card-name")?.textContent.toLowerCase() || "";
+
+        const matches = productName.includes(searchTerm);
+
+        card.style.display = matches ? "" : "none";
+
+        if (matches) visibleCount++;
+    });
+
+    const noResults = document.getElementById("noSearchResults");
+
+    if (noResults) {
+        noResults.style.display =
+            visibleCount === 0 && cards.length > 0 ? "block" : "none";
+    }
+}
+
+
+// 5. LOAD PRODUCTS FROM SUPABASE
+async function testSupabase() {
+    const productsContainer = document.querySelector(".products");
+
+    if (!productsContainer) return;
+
+    productsContainer.innerHTML =
+        '<p class="loading-message">Loading jewellery collection...</p>';
+
+    try {
+        const { data, error } = await supabaseClient
+            .from("products")
+            .select("*")
+            .eq("is_active", true);
+
+        if (error) throw error;
+
+        const params = new URLSearchParams(window.location.search);
+        const selectedCategory = params.get("category");
+        const selectedCollection = params.get("collection");
+        const selectedSort = params.get("sort");
+
+        window.homeProducts = (data || []).filter(product => {
+            const productCategories = String(product.category || "")
+                .toLowerCase()
+                .split(",")
+                .map(category => category.trim().replace(/s$/, ""));
+
+            const categoryMatch = !selectedCategory ||
+                productCategories.includes(
+                    selectedCategory.toLowerCase().trim().replace(/s$/, "")
+                );
+
+            const productCollections = String(product.collection || "")
+                .toLowerCase()
+                .split(",")
+                .map(collection => collection.trim());
+
+            const collectionMatch = !selectedCollection ||
+                productCollections.includes(selectedCollection.toLowerCase().trim());
+
+            return categoryMatch && collectionMatch;
+        });
+
+        if (selectedSort === "trending") {
+            window.homeProducts.sort((a, b) =>
+                Number(b.is_trending || 0) - Number(a.is_trending || 0)
+            );
+        }
+
+        productsContainer.innerHTML = "";
+
+        if (!window.homeProducts.length) {
+            productsContainer.innerHTML =
+                '<p class="loading-message">Abhi products available nahi hain. Please baad mein check karein.</p>';
+            return;
+        }
+
+        window.homeProducts.forEach(product => {
+            const price = Number(product.price) || 0;
+            const mrp = Number(product.mrp) || 0;
+            const hasDiscount = mrp > price && price > 0;
+
+            const discount = hasDiscount
+                ? Math.round(((mrp - price) / mrp) * 100)
+                : 0;
+
+            const card = document.createElement("div");
+            card.className = "card";
+
+            const productLink = document.createElement("a");
+            productLink.className = "product-link";
+            productLink.href =
+                "products/product.html?id=" +
+                encodeURIComponent(product.id);
+
+            const imageBox = document.createElement("div");
+            imageBox.className = "product-image-box";
+
+            const image = document.createElement("img");
+            image.src = product.image || "";
+            image.alt = product.name || "ZyLo jewellery";
+            image.loading = "lazy";
+
+            image.onerror = function () {
+                this.style.display = "none";
+            };
+
+            const bestSeller = document.createElement("span");
+            bestSeller.className = "best-seller";
+            bestSeller.textContent = "Best Seller";
+
+            imageBox.appendChild(image);
+            imageBox.appendChild(bestSeller);
+
+            if (hasDiscount) {
+                const discountBadge = document.createElement("span");
+                discountBadge.className = "discount-badge";
+                discountBadge.textContent = discount + "% OFF";
+                imageBox.appendChild(discountBadge);
+            }
+
+            const priceRow = document.createElement("div");
+            priceRow.className = "card-price";
+
+            const offerPrice = document.createElement("span");
+            offerPrice.className = "offer-price";
+            offerPrice.textContent = "₹" + price.toLocaleString("en-IN");
+
+            priceRow.appendChild(offerPrice);
+
+            if (hasDiscount) {
+                const oldPrice = document.createElement("span");
+                oldPrice.className = "old-price";
+                oldPrice.textContent = "₹" + mrp.toLocaleString("en-IN");
+                priceRow.appendChild(oldPrice);
+            }
+
+            const rating = document.createElement("div");
+            rating.className = "card-rating";
+            rating.textContent = "★★★★☆";
+
+            const name = document.createElement("div");
+            name.className = "card-name";
+            name.textContent = product.name || "Jewellery";
+
+            productLink.appendChild(imageBox);
+            productLink.appendChild(priceRow);
+            productLink.appendChild(rating);
+            productLink.appendChild(name);
+
+            const addButton = document.createElement("button");
+            addButton.className = "card-add-btn";
+            addButton.type = "button";
+            addButton.textContent = "ADD TO CART";
+
+            addButton.addEventListener("click", function () {
+                addHomeToCart(product.id);
+            });
+
+            card.appendChild(productLink);
+            card.appendChild(addButton);
+
+            productsContainer.appendChild(card);
+        });
+
+        const noResults = document.createElement("p");
+        noResults.id = "noSearchResults";
+        noResults.className = "loading-message";
+        noResults.textContent = "Koi matching product nahi mila.";
+        noResults.style.display = "none";
+
+        productsContainer.appendChild(noResults);
+
+        searchProducts();
+
+    } catch (error) {
+        console.error("Supabase products error:", error);
+
+        productsContainer.innerHTML =
+            '<p class="loading-message">Products load nahi ho paaye. Internet, Supabase settings aur products table check karein.</p>';
+    }
+}
+
+
+
+// 7. CONTACT POPUP
+function openContact() {
+    const popup = document.getElementById("contactPopup");
+    if (popup) popup.style.display = "flex";
+}
+
+function closeContact() {
+    const popup = document.getElementById("contactPopup");
+    if (popup) popup.style.display = "none";
+}
+
+
+// 8. OPTIONAL BUTTON HELPERS
+function comingSoon() {
+    alert("Ye feature jald hi available hoga!");
+}
+
+function closeSuccessPopup() {
+    const popup = document.getElementById("successPopup");
+    if (popup) popup.style.display = "none";
+}
+
+
+// 9. PAGE STARTUP
+document.addEventListener("DOMContentLoaded", function () {
+    updateCartCount();
+    updateAuthNav();
+    testSupabase();
+
+    const searchInput = document.querySelector(".search");
+
+    if (searchInput) {
+        searchInput.addEventListener("input", searchProducts);
+    }
+
+
+    const contactPopup = document.getElementById("contactPopup");
+
+    if (contactPopup) {
+        contactPopup.addEventListener("click", function (event) {
+            if (event.target === contactPopup) {
+                closeContact();
+            }
+        });
+    }
+});
+</script>
+
+</body>
+</html>

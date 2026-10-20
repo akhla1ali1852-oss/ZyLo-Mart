@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
+    
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -173,6 +176,94 @@
                 flex-direction: column;
             }
         }
+        
+        /* Product image and link */
+        .product-preview {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #f8f8f8;
+            padding: 12px;
+            border-radius: 9px;
+            margin-bottom: 15px;
+        }
+
+        .product-preview img {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        .product-preview-info {
+            min-width: 0;
+        }
+
+        .product-preview-info strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .product-preview-info a {
+            color: #1677ff;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 7px;
+        }
+
+        .product-preview-info a:hover {
+            text-decoration: underline;
+        }
+
+        /* Owner label */
+        .owner-label {
+            font-size: 13px;
+            color: #ddd;
+            margin-right: 12px;
+        }
+
+        @media (max-width: 650px) {
+            .product-preview img {
+                width: 70px;
+                height: 70px;
+            }
+        }
+        
+        /* Zylo Owner Badge */
+        .owner-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 15px;
+            margin: 8px 12px 8px 0;
+            border: 1px solid rgba(212, 175, 55, 0.45);
+            border-radius: 30px;
+            background: linear-gradient(135deg, #fff9e8, #f5e5b2);
+            color: #76551a;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
+            box-shadow: 0 3px 10px rgba(118, 85, 26, 0.10);
+        }
+
+        .owner-label::before {
+            content: "✦";
+            font-size: 15px;
+            color: #b58a28;
+        }
+
+        @media (max-width: 600px) {
+            .owner-label {
+                padding: 7px 11px;
+                font-size: 11px;
+                margin-right: 6px;
+            }
+        }
+
+
     </style>
 </head>
 
@@ -181,6 +272,8 @@
     <div class="header">
 
         <h1>🛒 ZyLo Admin</h1>
+
+        <span class="owner-label">Owner: Akhlad Ali</span>
 
         <button class="logout-btn" onclick="adminLogout()">
             Logout
@@ -361,6 +454,17 @@
             `✅ ${data.length} order(s) found`;
 
 
+        
+        const { data: productRows, error: productLookupError } = await supabaseClient
+            .from("products")
+            .select("id, name, image");
+
+        if (productLookupError) {
+            console.error("Products lookup Error:", productLookupError);
+        }
+
+        const productsForOrders = productRows || [];
+
         data.forEach(order => {
 
             const card =
@@ -368,6 +472,12 @@
 
             card.className =
                 "order-card";
+
+            
+            const matchedProduct = productsForOrders.find(product =>
+                String(product.name || "").trim().toLowerCase() ===
+                String(order.product_name || "").trim().toLowerCase()
+            );
 
 
             card.innerHTML = `
@@ -423,10 +533,34 @@
                     </div>
 
 
-                    <div class="info-box">
+                    
+                    
+                    <div class="product-preview">
+                        <img
+                        src="${matchedProduct?.image || ''}"
+                        alt="${order.product_name || 'Product image'}"
+                        onerror="this.style.display='none'"
+                    >
+
+                    <div class="product-preview-info">
                         <strong>Product</strong>
                         ${order.product_name || "-"}
+
+                        ${
+                            matchedProduct?.id
+                                ? `<a
+                                    href="products/product.html?id=${encodeURIComponent(matchedProduct.id)}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    ↗ View Product
+                                </a>`
+                            : `<span>Product link unavailable</span>`
+                        }
                     </div>
+                </div>
+
+
 
 
                     <div class="info-box">

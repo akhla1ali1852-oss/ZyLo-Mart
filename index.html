@@ -1,1592 +1,981 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZyLo | Kitchen & Home Essentials Lucknow</title>
-    <style>
-body {
-    background:white;
-    font-family: Arial;
-    margin: 10px;
-    overflow-x: hidden;
-}
-h1 {
-    color: black;
-    padding: 20px;
-    text-align: left;
-}
-.search {
-    padding: 15px;
-    width: 90%;
-    max-width: 400px;
-    border-radius: 20px;
-    border: 3px solid gray;
-    margin-top: 20px;
-}
-/* ===== PRODUCT CARDS ===== */
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fbf8f2">
+  <title>ZyLo | Jewellery for Every You</title>
+  <meta name="description" content="Discover elegant everyday jewellery and trending styles at ZyLo.">
 
-.products {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    margin-top: 30px;
-}
+  <style>
+    :root {
+      --ink: #171613;
+      --muted: #716b63;
+      --cream: #fbf8f2;
+      --sand: #eee5d8;
+      --gold: #b58b51;
+      --line: #e8e1d8;
+    }
 
-.card {
-    background: white;
-    border: 1px solid #ddd;
-    padding: 12px;
-    border-radius: 4px;
-    text-align: left;
-    box-sizing: border-box;
-    overflow: hidden;
-}
+    * { box-sizing: border-box; }
 
-.card:hover {
-    transform: translateY(-3px);
-    transition: 0.2s;
-}
+    html { scroll-behavior: smooth; }
 
-.product-link {
-    text-decoration: none;
-    color: #111;
-    display: block;
-}
+    body {
+      margin: 0;
+      background: #fffefa;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      overflow-x: hidden;
+    }
 
-.product-image-box {
-    position: relative;
-    width: 100%;
-    height: 250px;
-    overflow: hidden;
-}
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
 
-.product-image-box img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 2px;
-}
+    .topbar {
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 10px clamp(16px, 4vw, 52px);
+      background: #fffefa;
+      border-bottom: 1px solid #f0ece6;
+      position: relative;
+      z-index: 5;
+    }
 
-/* Best Seller */
+    .brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: max-content;
+    }
 
-.best-seller {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: #159b9b;
-    color: white;
-    padding: 7px 12px;
-    font-size: 15px;
-    border-radius: 0 0 8px 0;
-}
+    .brand-name {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 31px;
+      letter-spacing: 9px;
+      line-height: 1;
+      font-weight: 500;
+      padding-left: 8px;
+    }
 
-/* Discount */
+    .brand-tag {
+      font-size: 8px;
+      letter-spacing: 2px;
+      margin-top: 5px;
+      color: #514b43;
+    }
 
-.discount-badge {
-    position: absolute;
-    bottom: 10px;
-    right: 8px;
-    background: #ff4b00;
-    color: white;
-    padding: 9px 12px;
-    border-radius: 7px;
-    font-size: 17px;
-    font-weight: bold;
-}
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      font-size: 13px;
+    }
 
-/* Heart + Eye */
+    .main-nav a:hover, .icon-link:hover { color: var(--gold); }
 
-.card-icons {
-    position: absolute;
-    right: 8px;
-    top: 45px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+    .nav-tools {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
 
-.card-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: #ed1c24;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 25px;
-}
+    .search-wrap {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 9px 12px;
+      gap: 8px;
+      width: min(220px, 24vw);
+    }
 
-/* Price */
+    .search-wrap input {
+      border: 0;
+      outline: 0;
+      background: transparent;
+      width: 100%;
+      min-width: 0;
+      font-size: 12px;
+    }
 
-.card-price {
-    margin-top: 15px;
-}
+    .icon-link {
+      font-size: 22px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
 
-.card-price .offer-price {
-    color: #e51b23;
-    font-size: 27px;
-    font-weight: bold;
-}
+    .cart-count {
+      position: absolute;
+      right: -7px;
+      top: -8px;
+      border-radius: 50%;
+      background: #171613;
+      color: #fff;
+      font-size: 10px;
+      min-width: 17px;
+      height: 17px;
+      display: grid;
+      place-items: center;
+      padding: 0 4px;
+    }
 
-.card-price .old-price {
-    color: #666;
-    font-size: 19px;
-    text-decoration: line-through;
-    margin-left: 7px;
-}
+    .hero {
+      position: relative;
+      min-height: 350px;
+      height: clamp(350px, 35vw, 480px);
+      background:
+        linear-gradient(90deg, rgba(54,39,25,.76), rgba(54,39,25,.2)),
+        url("images/jewellery-hero.jpg") center/cover no-repeat,
+        #80664e;
+      display: flex;
+      align-items: center;
+      color: #fff;
+    }
 
-/* Rating */
+    .hero-content {
+      padding: 35px clamp(22px, 6vw, 76px);
+      max-width: 610px;
+      position: relative;
+      z-index: 1;
+    }
 
-.card-rating {
-    color: #f5a000;
-    font-size: 22px;
-    margin-top: 12px;
-    letter-spacing: 2px;
-}
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin: 0 0 18px;
+    }
 
-/* Product Name */
+    .hero h1 {
+      font: 500 clamp(42px, 5.6vw, 72px)/.98 Georgia, "Times New Roman", serif;
+      margin: 0 0 18px;
+      max-width: 540px;
+    }
 
-.card-name {
-    font-size: 19px;
-    line-height: 1.35;
-    margin: 10px 0;
-    height: 52px;
-    overflow: hidden;
-}
+    .hero p {
+      font-size: 14px;
+      line-height: 1.7;
+      max-width: 380px;
+      margin: 0 0 25px;
+    }
 
-/* Add To Cart */
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 20px;
+      border-radius: 4px;
+      background: #fffefa;
+      color: #171613;
+      font-size: 13px;
+      border: 1px solid #fffefa;
+      cursor: pointer;
+      transition: .2s;
+    }
 
-.card-add-btn {
-    width: 100%;
-    padding: 13px;
-    background: #ef3038;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 17px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 8px;
-}
+    .primary-btn:hover { background: #eee5d8; }
 
-.card-add-btn:hover {
-    background: #d9232a;
-}
+    .hero-note {
+      position: absolute;
+      right: 7%;
+      top: 30%;
+      font: italic 25px/1.2 Georgia, serif;
+      transform: rotate(-8deg);
+      max-width: 150px;
+      text-align: center;
+      color: #fff8e9;
+    }
 
+    .section { padding: 35px clamp(16px, 3.8vw, 48px); }
 
-/* ===== MOBILE ===== */
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 14px;
+    }
 
-@media (max-width: 768px) {
+    .category {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      min-width: 0;
+    }
+
+    .category-art {
+      width: min(100%, 118px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: #f5eee4;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border: 1px solid #f1e9df;
+      transition: transform .2s;
+    }
+
+    .category:hover .category-art { transform: translateY(-4px); }
+
+    .category-art img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .category-emoji { font-size: clamp(30px, 4vw, 48px); }
+
+    .category strong {
+      font-size: 14px;
+      font-weight: 500;
+      margin-top: 10px;
+    }
+
+    .category small {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.35;
+    }
+
+    .promo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      padding-top: 0;
+    }
+
+    .promo {
+      min-height: 170px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(90deg, rgba(45,31,20,.55), rgba(45,31,20,.03)),
+        url("images/for-her.jpg") center/cover no-repeat,
+        #d8c3aa;
+      border-radius: 3px;
+      color: white;
+    }
+
+    .promo:nth-child(2) {
+      background-image:
+        linear-gradient(90deg, rgba(20,20,20,.58), rgba(20,20,20,.05)),
+        url("images/mens-collection.jpg");
+      background-color: #6d675f;
+    }
+
+    .promo:nth-child(3) {
+      background-image:
+        linear-gradient(90deg, rgba(255,250,241,.03), rgba(255,250,241,.92)),
+        url("images/gifts.jpg");
+      color: #171613;
+      background-color: #eee0cf;
+    }
+
+    .promo-copy { padding: 20px; max-width: 90%; }
+
+    .promo h3 {
+      font: 500 clamp(21px, 2.3vw, 30px)/1.1 Georgia, serif;
+      margin: 0 0 8px;
+    }
+
+    .promo p { font-size: 12px; margin: 0 0 14px; }
+
+    .small-btn {
+      display: inline-block;
+      background: #fffefa;
+      color: #171613;
+      border-radius: 3px;
+      padding: 10px 13px;
+      font-size: 11px;
+    }
+
+    .wide-promo {
+      margin: 0 clamp(16px, 3.8vw, 48px) 18px;
+      min-height: 150px;
+      border-radius: 3px;
+      background:
+        linear-gradient(90deg, rgba(42,27,14,.15), rgba(250,241,228,.98)),
+        url("images/trending-banner.jpg") center/cover no-repeat,
+        #e9d8c2;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 25px clamp(18px, 5vw, 60px);
+    }
+
+    .wide-promo h3 {
+      font: 500 clamp(24px, 3vw, 36px) Georgia, serif;
+      margin: 0 0 8px;
+    }
+
+    .wide-promo p { font-size: 12px; margin: 0 0 15px; }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .section-heading h2 {
+      font: 500 clamp(27px, 3vw, 36px) Georgia, serif;
+      margin: 0 0 5px;
+    }
+
+    .section-heading p { font-size: 12px; color: var(--muted); margin: 0; }
+    .view-all { font-size: 12px; white-space: nowrap; }
 
     .products {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        padding: 0 10px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 17px;
     }
 
-    .card {
-        width: 100%;
-        padding: 10px;
+    .product-card {
+      min-width: 0;
+      border: 1px solid #eee8df;
+      background: #fff;
+      position: relative;
+      transition: box-shadow .2s;
     }
 
-    .product-image-box {
-        height: 180px;
+    .product-card:hover { box-shadow: 0 8px 24px rgba(38,28,17,.09); }
+
+    .product-image-link {
+      display: block;
+      aspect-ratio: 1/1.05;
+      background: #f5f0e9;
+      overflow: hidden;
     }
 
-    .best-seller {
-        font-size: 14px;
-        padding: 6px 9px;
+    .product-image-link img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .3s;
     }
 
-    .card-icons {
-        right: 6px;
-        top: 35px;
-        gap: 7px;
+    .product-card:hover .product-image-link img { transform: scale(1.035); }
+
+    .wishlist {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border: 0;
+      background: #fffefaed;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
     }
 
-    .card-icon {
-        width: 42px;
-        height: 42px;
-        font-size: 21px;
+    .product-info { padding: 10px; }
+
+    .product-name {
+      font-size: 12px;
+      line-height: 1.4;
+      min-height: 34px;
+      margin: 0 0 6px;
     }
 
-    .discount-badge {
-        font-size: 15px;
-        padding: 7px 9px;
+    .rating { font-size: 11px; color: #d58b1c; margin-bottom: 7px; }
+    .price { font-size: 14px; font-weight: 700; }
+
+    .old-price {
+      font-size: 11px;
+      color: #888;
+      text-decoration: line-through;
+      margin-left: 5px;
+      font-weight: 400;
     }
 
-    .card-price .offer-price {
-        font-size: 22px;
+    .add-btn {
+      width: 100%;
+      border: 1px solid #211d18;
+      background: #211d18;
+      color: white;
+      padding: 10px 6px;
+      margin-top: 10px;
+      font-size: 11px;
+      cursor: pointer;
     }
 
-    .card-price .old-price {
-        font-size: 15px;
+    .add-btn:hover { background: #4d3b29; }
+
+    .empty-state {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 35px 12px;
+      color: var(--muted);
+      font-size: 14px;
     }
 
-    .card-rating {
-        font-size: 18px;
+    .trust-strip {
+      background: #f8f1e8;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      padding: 24px clamp(16px, 5vw, 60px);
     }
 
-    .card-name {
-        font-size: 16px;
-        height: 45px;
+    .trust-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 11px;
     }
 
-    .card-add-btn {
-        font-size: 15px;
-        padding: 11px 5px;
+    .trust-icon { font-size: 25px; }
+    .trust-item strong { font-size: 12px; display: block; margin-bottom: 4px; }
+    .trust-item small { font-size: 10px; color: var(--muted); }
+
+    footer {
+      background: #171715;
+      color: #fff;
+      padding: 28px clamp(16px, 4vw, 50px) 18px;
     }
-}
-.categories {
-    margin-top: 25px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-.categories button {
-    background-color: white;
-    color: black;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
-    transition: 0.3s;
-}
-.categories button:hover {
-    background-color: black;
-    color: white;
-    transform: translateY(-3px);
-}
 
-/* ye hai button remove */
-@media (max-width: 768px) {
-    .slider-buttons{
-        display: none !important;
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid #45433f;
     }
-    .details-box {
-        width: 80%;
-        left: 50%;
-        transform: translateX(-50%);
-        right: auto;
-        top: 100px;
+
+    .footer-links { display: flex; gap: 22px; font-size: 12px; }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: #d0ccc5;
+      font-size: 10px;
+      padding-top: 16px;
     }
-}
 
-.buy-btn {
-    background-color: black;
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 20px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: 0.3s;
-    font-size: 14px;
-}
-.buy-btn:hover {
-    background-color: rgb(5, 94, 47);
-}
+    .mobile-nav { display: none; }
 
-.logo {
-    margin: 0;
-    font-size: 25px;
-    font-weight: 700;
-    color: #111827;
-    letter-spacing: 0;
-    white-space: nowrap;
-}
+    @media(max-width:900px) {
+      .topbar { gap: 12px; }
+      .main-nav { gap: 14px; }
+      .nav-tools { gap: 11px; }
+      .search-wrap { width: 170px; }
+      .categories { gap: 9px; }
+      .category small { font-size: 10px; }
+      .products { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .promo { min-height: 145px; }
+    }
 
-.brand-area {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    min-width: 0;
-}
+    @media(max-width:600px) {
+      body { padding-bottom: 66px; }
 
-.zm-logo {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: #ffffff;
-    color: #111827;
-    border: 2px solid #111827;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    font-weight: 800;
-    flex-shrink: 0;
-}
+      .topbar {
+        height: 60px;
+        padding: 8px 12px;
+        gap: 9px;
+      }
 
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    white-space: nowrap;
-}
+      .brand-name { font-size: 23px; letter-spacing: 6px; }
+      .brand-tag { font-size: 6px; letter-spacing: 1.4px; }
+      .main-nav { gap: 12px; font-size: 12px; }
+      .main-nav .help-link { display: none; }
+      .nav-tools { gap: 10px; }
 
-.nav-links a {
-    text-decoration: none;
-    color: #111827;
-    margin-left: 0;
-    font-size: 16px;
-    font-weight: 600;
-    transition: color 0.2s ease;
-}
+      .search-wrap {
+        width: 34px;
+        height: 34px;
+        padding: 8px;
+        justify-content: center;
+        border: 0;
+      }
 
-.nav-links a:hover {
-    color: #16834a;
-}
-.banner {
-    background-image: url('images/banner.jpg');
-    background-size: cover;
-    background-position: center;
-    height: 300px;
-    border-radius: 20px;
-    margin-top: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: left;
-    text-align: left;
-    padding-left: 50px;
-}
-.banner-text {
-    color: green;
-}
-.banner-text h1 {
-    font-size: 40px;
-}
-.banner-text p {
-    letter-spacing: 5px;
-    font-size: 30px;
-    margin-top: -10px;
-}
-@media (max-width: 600px) {
+      .search-wrap input { display: none; }
+      .icon-link { font-size: 20px; }
 
-    .banner {
-        width: 100%;
+      .hero {
         height: auto;
-        aspect-ratio: 16 / 10;
-        padding: 0;
-        margin-top: 20px;
-        background-size: 100% 100%;
+        min-height: 300px;
+        aspect-ratio: 1.42/1;
+        background-position: 58% center;
+      }
+
+      .hero-content { padding: 22px 18px; max-width: 75%; }
+      .eyebrow { font-size: 8px; letter-spacing: 1.4px; margin-bottom: 12px; }
+
+      .hero h1 {
+        font-size: clamp(34px, 9vw, 49px);
+        margin-bottom: 12px;
+      }
+
+      .hero p { font-size: 11px; line-height: 1.5; margin-bottom: 16px; }
+      .primary-btn { padding: 10px 13px; font-size: 11px; }
+      .hero-note { display: none; }
+      .section { padding: 24px 12px; }
+
+      .categories {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px 8px;
+      }
+
+      .category-art { width: min(100%, 78px); }
+      .category-emoji { font-size: 31px; }
+      .category strong { font-size: 12px; margin-top: 7px; }
+      .category small { font-size: 9px; }
+
+      .promo-grid {
+        grid-template-columns: 1fr;
+        padding-top: 0;
+        gap: 10px;
+      }
+
+      .promo { min-height: 145px; }
+      .promo-copy { padding: 18px; }
+      .promo h3 { font-size: 25px; }
+
+      .wide-promo {
+        margin: 0 12px 8px;
+        min-height: 125px;
+        padding: 18px;
         background-position: center;
-        background-repeat: no-repeat;
-        border-radius: 15px;
-    }
-
-    .banner-text {
-        display: none;
-    }
-
-}
-
-.image-slider {
-    position: relative;
-}
-.slider-buttons {
-    position: absolute;
-    top: 45%;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-}
-.slider-buttons button {
-    background-color: rgba(0,0,0,0.5);
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-
-.close-btn {
-    position: absolute;
-    top: 12px; right: 16px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #555;
-}
-.close-btn:hover {
-    color: red;
-}
-/* ye ha dot */
-.dots{
-    text-align:center;
-    margin-top:8px;
-}
-
-.dot{
-    height:10px;
-    width:10px;
-    background:#ccc;
-    border-radius:50%;
-    display:inline-block;
-    margin:0 3px;
-}
-
-.dot.active{
-    background:#000;
-}
-.modal-box select{
-    width: 100%;
-    padding: 12px 14px;
-    margin-bottom: 12px;
-    border-radius: 12px;
-    border: 2px solid #ddd;
-    font-size: 15px;
-    box-sizing: border-box;
-    outline: none;
-    font-family: Arial;
-}
-
-.modal-box select:focus{
-    border-color: #25D366;
-}
-/* Logo ke liye */
-/* ===== Splash Screen ===== */
-#splash{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:999999;
-    overflow:hidden;
-    transition:opacity 0.5s ease;
-}
-
-.splash-logo{
-    width:280px;
-    max-width:80%;
-    height:auto;
-    filter:drop-shadow(0 0 20px rgba(255,255,255,0.25));
-    animation:logoEntry 1.5s ease forwards,
-              floatLogo 2.5s ease-in-out infinite;
-}
-
-/* Logo Entry Animation */
-@keyframes logoEntry{
-
-    0%{
-        opacity:0;
-        transform:translateY(40px) scale(0.7);
-    }
-
-    60%{
-        opacity:1;
-        transform:translateY(0) scale(1.08);
-    }
-
-    100%{
-        opacity:1;
-        transform:translateY(0) scale(1);
-    }
-}
-
-/* Floating Effect */
-@keyframes floatLogo{
-
-    0%,100%{
-        transform:translateY(0);
-    }
-
-    50%{
-        transform:translateY(-8px);
-    }
-}
-/* sabse niche footer ke uper wala */
-.trust-section{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:15px;
-    margin:40px 0;
-}
-
-.trust-card{
-    background:white;
-    width:220px;
-    padding:20px;
-    border-radius:18px;
-    text-align:center;
-    box-shadow:0 5px 15px rgba(0,0,0,0.1);
-    transition:0.3s;
-}
-
-.trust-card:hover{
-    transform:translateY(-8px);
-    box-shadow:0 10px 25px rgba(0,0,0,0.2);
-}
-
-.trust-card span{
-    font-size:40px;
-}
-
-.trust-card h3{
-    margin-top:10px;
-    margin-bottom:8px;
-}
-
-.trust-card p{
-    color:#666;
-    font-size:14px;
-}
-@media (max-width:768px){
-
-
-
-    .trust-section{
-
-        display:grid;
-
-        grid-template-columns:1fr 1fr;
-
-        gap:10px;
-
-        padding:0 10px;
-
-    }
-
-
-
-    .trust-card{
-
-        width:100%;
-
-        padding:15px 10px;
-
-        box-sizing:border-box;
-
-    }
-
-
-
-    .trust-card span{
-
-        font-size:28px;
-
-    }
-
-
-
-    .trust-card h3{
-
-        font-size:14px;
-
-        margin:8px 0;
-
-    }
-
-
-
-    .trust-card p{
-
-        font-size:11px;
-
-        line-height:1.4;
-
-    }
-
-
-
-}
-/* content */
-.about-section{
-    background:grey;
-    padding:30px;
-    margin:30px 0;
-    border-radius:20px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.08);
-    text-align:center;
-}
-
-.about-section h2{
-    font-size:30px;
-    margin-bottom:15px;
-}
-
-.about-section p{
-    font-size:17px;
-    color:#555;
-    line-height:1.8;
-    max-width:900px;
-    margin:auto;
-}
-/* content mobile */
-@media (max-width:768px){
-
-.about-section{
-    padding:20px 15px;
-    margin:20px 0;
-}
-
-.about-section h2{
-    font-size:22px;
-}
-
-.about-section p{
-    font-size:14px;
-    line-height:1.7;
-}
-
-}
-/* ===== Premium Price ===== */
-
-.price-box{
-display:flex;
-align-items:center;
-gap:10px;
-flex-wrap:wrap;
-margin-bottom:8px;
-}
-
-.offer-price{
-font-size:34px;
-font-weight:bold;
-color:#111;
-}
-
-.old-price{
-font-size:22px;
-color:#888;
-text-decoration:line-through;
-}
-
-.discount{
-background:#0f9d58;
-color:white;
-padding:4px 10px;
-border-radius:20px;
-font-size:14px;
-font-weight:bold;
-}
-
-.tax-text{
-margin-top:5px;
-font-size:14px;
-color:#666;
-}
-
-@media(max-width:768px){
-
-.offer-price{
-font-size:28px;
-}
-
-.old-price{
-font-size:18px;
-}
-
-.discount{
-font-size:12px;
-}
-
-.tax-text{
-font-size:12px;
-}
-
-}
-/* ===== MOBILE BOTTOM NAV ===== */
-
-.mobile-bottom-nav {
-    display: none;
-}
-
-@media (max-width: 768px) {
-
-    .mobile-bottom-nav {
+      }
+
+      .wide-promo h3 { font-size: 25px; }
+      .section-heading { margin-bottom: 14px; }
+      .section-heading h2 { font-size: 25px; }
+      .section-heading p { font-size: 10px; }
+
+      .products { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .product-info { padding: 8px; }
+      .product-name { font-size: 11px; min-height: 31px; }
+      .price { font-size: 13px; }
+      .add-btn { padding: 9px 4px; font-size: 10px; }
+
+      .trust-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 18px 10px;
+        gap: 17px 8px;
+      }
+
+      .trust-item { justify-content: flex-start; padding-left: 8px; gap: 8px; }
+      .trust-icon { font-size: 21px; }
+      .trust-item strong { font-size: 10px; }
+      .trust-item small { font-size: 9px; }
+
+      .footer-top { flex-direction: column; align-items: center; }
+      .footer-links { gap: 20px; }
+      .footer-bottom { justify-content: center; text-align: center; }
+
+      .mobile-nav {
         position: fixed;
         bottom: 0;
         left: 0;
-        width: 100%;
-        height: 72px;
-        background: white;
-        border-top: 1px solid #ddd;
+        right: 0;
+        height: 62px;
+        background: #fffefa;
+        border-top: 1px solid #e9e2d9;
         display: flex;
-        justify-content: space-around;
         align-items: center;
-        z-index: 99999;
-        box-shadow: 0 -3px 15px rgba(0,0,0,0.08);
-    }
+        justify-content: space-around;
+        z-index: 10;
+      }
 
-    .mobile-bottom-nav a {
-        text-decoration: none;
-        color: #111;
+      .mobile-nav a {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        font-weight: 500;
-        gap: 4px;
-    }
-
-    .mobile-bottom-icon {
-        font-size: 27px;
-        line-height: 1;
-    }
-
-    .mobile-cart-count {
-        font-size: 12px;
-        font-weight: bold;
-    }
-
-    body {
-        padding-bottom: 85px;
-    }
-}
-@media (max-width: 768px) {
-
-    .nav-links > a[href="cart.html"] {
-        display: none !important;
-    }
-
-    #authNav {
-        display: none !important;
-    }
-
-    #cartNav {
-        display: none !important;
-    }
-
-}
-/* ===== DESKTOP NAVBAR ONLY ===== */
-@media (min-width: 769px) {
-    .navbar {
-        background: #ffffff;
-        width: 100%;
-        box-sizing: border-box;
-        padding: 14px 20px;
-        border-radius: 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 12px;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
-    }
-
-    .logo {
-        font-size: 25px;
-        letter-spacing: 0;
-    }
-
-    .nav-links {
-        display: flex;
-        align-items: center;
-        gap: 18px;
-        white-space: nowrap;
-    }
-
-    .nav-links a {
-        color: #111827;
-        margin-left: 0;
-        font-size: 16px;
-        font-weight: 600;
-    }
-}
-/* ===== MOBILE NAVBAR + H1 UPDATE ===== */
-
-
-@media (max-width: 768px) {
-
-    /* Navbar */
-    .navbar {
-        padding: 14px 16px;
-        border-radius: 22px;
-        gap: 10px;
-    }
-
-    .logo {
-        font-size: 24px;
-        letter-spacing: 1px;
-        white-space: nowrap;
-    }
-
-    .nav-links {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        white-space: nowrap;
-    }
-
-    .nav-links a {
-        margin-left: 0;
-        font-size: 16px;
-    }
-
-    /* Main Heading */
-    h1 {
-        font-size: 28px;
-        line-height: 1.15;
-        padding: 12px 10px;
-        margin: 25px 0 10px;
-        white-space: nowrap;
-    }
-
-}
-/* ===== ZM BRAND LOGO ===== */
-
-.brand-area {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.zm-logo {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: white;
-    color: #111;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 17px;
-    font-weight: bold;
-    letter-spacing: -1px;
-    flex-shrink: 0;
-}
-
-
-/* ===== MOBILE NAVBAR ===== */
-
-@media (max-width: 768px) {
-
-    .navbar {
-        background: #ffffff;
-        width: 100%;
-        box-sizing: border-box;
-        padding: 12px 14px;
-        border-radius: 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 8px;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
-    }
-
-    .brand-area {
-        gap: 9px;
-    }
-
-    .zm-logo {
-        width: 36px;
-        height: 36px;
-        font-size: 14px;
-    }
-
-    .logo {
-        font-size: 22px;
-        letter-spacing: 0;
-        white-space: nowrap;
-    }
-
-    .nav-links {
-        display: flex;
-        align-items: center;
-        gap: 13px;
-        white-space: nowrap;
-    }
-
-    .nav-links a {
-        margin-left: 0;
-        font-size: 15px;
-    }
-
-}
-
-/* ===== ZYLO MOBILE DESIGN UPDATE ===== */
-@media (max-width: 768px) {
-
-    body {
-        margin: 0;
-        padding-bottom: 95px;
-        background: #ffffff;
-        font-family: Arial, sans-serif;
-    }
-
-    /* Navbar */
-    .navbar {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 14px 12px;
-        margin: 0;
-        background: #ffffff;
-        border-radius: 0;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-        gap: 8px;
-    }
-
-    .brand-area {
-        gap: 7px;
-    }
-
-    .zm-logo {
-        width: 40px;
-        height: 40px;
-        border: 2px solid #102d38;
-        background: white;
-        color: #102d38;
-        font-size: 15px;
-    }
-
-    .logo {
-        font-size: 21px;
-        letter-spacing: 0;
-        color: #102d38;
-    }
-
-    .nav-links {
-        gap: 12px;
-    }
-
-    .nav-links a {
-        font-size: 14px;
-        color: #102d38;
-    }
-
-    /* Purani heading hide — only on phone */
-    body > h1 {
-        display: none !important;
-    }
-
-    
-    /* Banner */
-    .banner {
-        width: 100%;
-        height: auto;
-        aspect-ratio: 16 / 9;
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        border-radius: 0 0 18px 18px;
-
-        background-size: 100% 100%;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
-
-    /* Old grey Welcome box hide on phone */
-    .about-section {
-        display: none !important;
-    }
-
-    /* Trust section */
-    .trust-section {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 0;
-        margin: 14px 12px 24px;
-        padding: 18px 4px;
-        border-radius: 20px;
-        background: #f1f8f3;
-        box-shadow: none;
-    }
-
-    .trust-card {
-        width: auto;
-        min-width: 0;
-        padding: 8px 3px;
-        box-sizing: border-box;
-        background: transparent;
-        border-radius: 0;
-        box-shadow: none;
-        text-align: center;
-    }
-
-    .trust-card + .trust-card {
-        border-left: 1px solid #d8e8de;
-    }
-
-    .trust-card span {
-        font-size: 27px;
-    }
-
-    .trust-card h3 {
-        font-size: 11px;
-        line-height: 1.3;
-        margin: 8px 0 5px;
-        color: #102d38;
-        overflow-wrap: anywhere;
-    }
-
-    .trust-card p {
+        gap: 3px;
         font-size: 10px;
-        line-height: 1.4;
-        margin: 0;
-        color: #64748b;
-        overflow-wrap: anywhere;
+        color: #514b43;
+      }
+
+      .mobile-nav span { font-size: 20px; }
     }
-
-    /* Search bar */
-    .search {
-        display: block;
-        width: calc(100% - 30px);
-        max-width: none;
-        box-sizing: border-box;
-        margin: 22px 15px;
-        border: 1px solid #d5ded9;
-        border-radius: 14px;
-        font-size: 16px;
+    .category-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
     }
-
-    /* Bottom navigation */
-    .mobile-bottom-nav {
-        height: 76px;
-        background: #ffffff;
-        border-top: 1px solid #e5e7eb;
-        box-shadow: 0 -2px 12px rgba(0,0,0,0.05);
-    }
-
-    .mobile-bottom-nav a {
-        color: #64748b;
-        font-size: 14px;
-    }
-
-    .mobile-bottom-nav a:first-child {
-        color: #07884b;
-    }
-}
-
-/* Small phones */
-@media (max-width: 380px) {
-    .logo {
-        font-size: 19px;
-    }
-
-    .nav-links {
-        gap: 9px;
-    }
-
-    .nav-links a {
-        font-size: 13px;
-    }
-}
-
-    </style>
-    <!-- EmailJS Connect -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
-<script>
-(function(){
-    emailjs.init("v6Q6Gq1wJUZn5m03Q");
-})();
-</script>
-<!-- Supabase app -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const supabaseUrl = "https://ghgpuncmdupypxdfhibk.supabase.co";
-const supabaseKey = "sb_publishable_wyPuvavd5bq6Fb8FgE_mFg_lszjv1Ld";
-
-const supabaseClient = window.supabase.createClient(
-    supabaseUrl,
-    supabaseKey
-);
-</script>
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-490MKJZKP7"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-
-gtag('config', 'G-490MKJZKP7');
-</script>
+  </style>
 </head>
 
 <body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="ZyLo home">
+      <span class="brand-name">ZYLO</span>
+      <span class="brand-tag">JEWELLERY FOR EVERY YOU</span>
+    </a>
 
-    <div id="splash">
-    <img src="images/logo.png" class="splash-logo">
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+    </nav>
+
+    <div class="nav-tools">
+      <label class="search-wrap" aria-label="Search jewellery">
+        <span>⌕</span>
+        <input id="searchInput" type="search" placeholder="Search for jewellery..." autocomplete="off">
+      </label>
+
+      <a class="icon-link" id="accountLink" href="login.html" aria-label="Account">♙</a>
+      <a class="icon-link" href="cart.html" aria-label="Cart">
+        🛒<span class="cart-count" id="cartCount">0</span>
+      </a>
     </div>
-<div class="navbar">
+  </header>
 
-    <div class="brand-area">
-        <div class="zm-logo">ZM</div>
-        <h2 class="logo">ZyLo Mart</h2>
-    </div>
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <p class="eyebrow">Trending jewellery collection</p>
+        <h1>Shine in<br>Your Own Way</h1>
+        <p>Timeless pieces. Modern vibes. Perfect for every occasion.</p>
+        <a class="primary-btn" href="products.html">Shop Now <span>→</span></a>
+      </div>
+      <div class="hero-note">More than<br>just jewellery ♡</div>
+    </section>
 
-    <div class="nav-links">
-        <a href="#">Home</a>
-
-        <a href="#" onclick="openContact()">
-            Contact
+    <section class="section" aria-label="Jewellery categories">
+      <div class="categories">
+        <a class="category" href="products.html">
+          <span class="category-art">
+            <span class="category-art">
+            <img src="image/all.png" alt="Rings" class="category-photo">
+            </span>
+          </span>
+          <strong>All Products</strong>
+          <small>Explore everything</small>
         </a>
 
-        <span id="cartNav">
-            <a href="cart.html">
-                🛒 Cart (<span id="cartCount">0</span>)
-            </a>
-        </span>
+        <a class="category" href="products.html?category=Rings">
+          <span class="category-art">
+            <img src="image/ring.jpeg" alt="Rings" class="category-photo">
+          </span>
+          <strong>Rings</strong><small>For every story</small>
+        </a>
+        <a class="category" href="products.html?category=Earrings">
+          <span class="category-art">
+            <img src="image/earring.jpeg" alt="Rings" class="category-photo">
+          </span>
+          <strong>Earrings</strong><small>Small details, big impact</small>
+        </a>
+        <a class="category" href="products.html?category=Necklaces">
+          <span class="category-art">
+            <img src="image/necklace.jpeg" alt="Rings" class="category-photo">
+          </span>
+          <strong>Necklaces</strong><small>Grace in every layer</small>
+        </a>
+        <a class="category" href="products.html?category=Bracelets">
+          <span class="category-art">
+            <img src="image/bracelets.jpeg" alt="Rings" class="category-photo">
+          </span>
+          <strong>Bracelets</strong><small>Style around your wrist</small>
+        </a>
+        <a class="category" href="products.html?category=Sets">
+          <span class="category-art">
+            <img src="image/set.jpg" alt="Rings" class="category-photo">
+          </span>
+          <strong>Sets</strong><small>Complete your look</small>
+        </a>
+        <a class="category" href="products.html?category=Gifts">
+          <span class="category-art">
+            <img src="image/gift.png" alt="Rings" class="category-photo">
+          </span>
+          <strong>Gifts</strong><small>Because you care</small>
+        </a>
+      </div>
+    </section>
 
-        <span id="authNav">
-            <a href="account.html">
-                👤 Account
-            </a>
-        </span>
+    <section class="section promo-grid" aria-label="Featured collections">
+      <a class="promo" href="products.html?collection=For%20Her">
+        <div class="promo-copy">
+          <h3>For Her</h3>
+          <p>Elegant · Trendy · Unique</p>
+          <span class="small-btn">Shop Now →</span>
+        </div>
+      </a>
+
+      <a class="promo" href="products.html?collection=Mens">
+        <div class="promo-copy">
+          <h3>Men’s Collection</h3>
+          <p>Minimal · Bold · Classy</p>
+          <span class="small-btn">Shop Now →</span>
+        </div>
+      </a>
+
+      <a class="promo" href="products.html?collection=Gifts">
+        <div class="promo-copy">
+          <h3>Gifts Under ₹299</h3>
+          <p>Thoughtful gifts for every occasion</p>
+          <span class="small-btn">Shop Now →</span>
+        </div>
+      </a>
+    </section>
+
+    <a class="wide-promo" href="products.html?sort=trending">
+      <div>
+        <h3>Trending Now</h3>
+        <p>What’s hot, right now</p>
+        <span class="small-btn">Shop Now →</span>
+      </div>
+    </a>
+
+    <section class="section" id="trending">
+      <div class="section-heading">
+        <div>
+          <h2>Trending Now</h2>
+          <p>Discover pieces you’ll love</p>
+        </div>
+        <a class="view-all" href="products.html">View All →</a>
+      </div>
+
+      <div class="products" id="homeProducts" aria-live="polite">
+        <div class="empty-state">Loading jewellery...</div>
+      </div>
+    </section>
+
+    <section class="trust-strip" aria-label="Shopping information">
+      <div class="trust-item">
+        <span class="trust-icon">♧</span>
+        <div><strong>Shipping Information</strong><small>See delivery details at checkout</small></div>
+      </div>
+      <div class="trust-item">
+        <span class="trust-icon">♢</span>
+        <div><strong>Secure Account</strong><small>Account access through login</small></div>
+      </div>
+      <div class="trust-item">
+        <span class="trust-icon">↻</span>
+        <div><strong>Returns</strong><small>Check the product/return policy</small></div>
+      </div>
+      <div class="trust-item">
+        <span class="trust-icon">☏</span>
+        <div><strong>Need Help?</strong><small>Contact our support team</small></div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer">
+    <div class="footer-top">
+      <a class="brand" href="index.html">
+        <span class="brand-name">ZYLO</span>
+        <span class="brand-tag" style="color:#d0ccc5">JEWELLERY FOR EVERY YOU</span>
+      </a>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="products.html">Shop</a>
+        <a href="cart.html">Cart</a>
+        <a href="account.html">Account</a>
+      </div>
     </div>
-
-</div>
-<!-- ===== END NAVBAR ===== -->
-
-
-<h1><b>Lucknow Market.Place</b></h1>
-<div class="banner">
-    <div class="banner-text">
+    <div class="footer-bottom">
+      <span>© 2026 ZyLo. All rights reserved.</span>
+      <span>Style · Elegance · You</span>
     </div>
-</div>
-<div class="about-section" id="about">
+  </footer>
 
-    <h2>🏠 Welcome to ZyLo</h2>
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a href="index.html"><span>⌂</span>Home</a>
+    <a href="products.html"><span>⌕</span>Shop</a>
+    <a href="cart.html"><span>🛒</span>Cart <b id="mobileCartCount">0</b></a>
+    <a href="account.html"><span>♙</span>Account</a>
+  </nav>
 
-    <p>
-        ZyLo is your trusted online store for quality kitchen and home essentials.
-        We offer carefully selected products at affordable prices, including
-        kitchen accessories, water bottles, soap holders, bowls, juicers,
-        and many more useful items.
-    </p>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Keep the public publishable key only.
+    // Never put a Supabase service-role key in browser code.
+    const supabaseUrl = "https://ghgpuncmdupypxdfhibk.supabase.co";
+    const supabaseKey = "sb_publishable_wyPuvavd5bq6Fb8FgE_mFg_lszjv1Ld";
 
-</div>
+    const supabaseClient = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
 
-<input type="text"
-    placeholder="Search products..."
-    class="search"
-    onkeyup="searchProducts()">
+    let homeProducts = [];
 
-<div class="products"></div>
+    function readCart() {
+      try {
+        return JSON.parse(localStorage.getItem("zyloCart")) || [];
+      } catch {
+        return [];
+      }
+    }
 
-<script>
-// ===== CART COUNT =====
-function updateCartCount() {
-    const cart = JSON.parse(localStorage.getItem("zyloCart")) || [];
-
-    const totalItems = cart.reduce(
-        (total, item) => total + item.quantity,
+    function updateCartCount() {
+      const count = readCart().reduce(
+        (sum, item) => sum + (Number(item.quantity) || 0),
         0
-    );
+      );
 
-    const cartCount = document.getElementById("cartCount");
-    const mobileCartCount = document.getElementById("mobileCartCount");
-
-    if (cartCount) {
-        cartCount.textContent = totalItems;
+      document.getElementById("cartCount").textContent = count;
+      document.getElementById("mobileCartCount").textContent = count;
     }
 
+    function addHomeToCart(productId) {
+      const product = homeProducts.find(
+        item => String(item.id) === String(productId)
+      );
 
-    if (mobileCartCount) {
-        mobileCartCount.textContent = totalItems;
-    }
-}
-
-updateCartCount();
-window.addEventListener("cartUpdated", updateCartCount);
-
-// ===== HOME ADD TO CART =====
-function addHomeToCart(productId) {
-
-    const product = window.homeProducts?.find(
-        item => item.id == productId
-    );
-
-    if (!product) {
-        alert("Product not found.");
+      if (!product) {
+        alert("Product not found. Please refresh the page.");
         return;
-    }
+      }
 
-    let cart = JSON.parse(localStorage.getItem("zyloCart")) || [];
+      const cart = readCart();
 
-    const existingProduct = cart.find(
-        item => item.id == productId
-    );
+      const existing = cart.find(
+        item => String(item.id) === String(productId)
+      );
 
-    if (existingProduct) {
-        existingProduct.quantity += 1;
-    } else {
+      if (existing) {
+        existing.quantity = (Number(existing.quantity) || 0) + 1;
+      } else {
         cart.push({
-            id: product.id,
-            name: product.name,
-            price: Number(product.price),
-            image: product.image,
-            quantity: 1
+          id: product.id,
+          name: product.name,
+          price: Number(product.price),
+          image: product.image,
+          quantity: 1
         });
+      }
+
+      localStorage.setItem("zyloCart", JSON.stringify(cart));
+      updateCartCount();
+      window.dispatchEvent(new Event("cartUpdated"));
+      alert("Added to your cart 🛒");
     }
 
-    localStorage.setItem("zyloCart", JSON.stringify(cart));
+    window.addEventListener("cartUpdated", updateCartCount);
+    window.addEventListener("storage", updateCartCount);
+    updateCartCount();
 
-    window.dispatchEvent(new Event("cartUpdated"));
-
-    alert("Product has been added to your cart 🛒");
-}
-
-// ===== LOGIN STATUS =====
-
-async function updateAuthNav() {
-
-    const authNav = document.getElementById("authNav");
-
-    if (!authNav) return;
-
-    const {
-        data: { user }
-    } = await supabaseClient.auth.getUser();
-
-    if (user) {
-
-        authNav.innerHTML = `
-            <a href="account.html">👤 Account</a>
-        `;
-
-    } else {
-
-        authNav.innerHTML = `
-            <a href="login.html">👤 Login</a>
-        `;
-
+    function safeText(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[char]));
     }
-}
 
-updateAuthNav();
+    function renderProducts(products) {
+      const container = document.getElementById("homeProducts");
+      container.innerHTML = "";
 
-supabaseClient.auth.onAuthStateChange(() => {
-    updateAuthNav();
-});
-// ===== SEARCH =====
-function searchProducts() {
-    var input = document.querySelector(".search").value.toLowerCase();
-    var cards = document.getElementsByClassName("card");
-    for (var i = 0; i < cards.length; i++) {
-        var text = cards[i].innerText.toLowerCase();
-        cards[i].style.display = text.includes(input) ? "block" : "none";
-    }
-}
-
-document.addEventListener("click", function(event) {
-    var box = document.getElementById("detailsBox");
-    var card = event.target.closest(".card");
-    if (!card && box && !box.contains(event.target)) {
-        box.style.display = "none";
-    }
-});
-
-// ===== BANNER SLIDER =====
-var bannerImages = [
-    "images/banner.png",
-    "images/banner2.png",
-    "images/banner3.png",
-    "images/banner4.png",
-    "images/banner5.png"
-];
-
-var bannerIndex = 0;
-
-function changeBanner() {
-
-    document.querySelector(".banner").style.backgroundImage =
-    "url('" + bannerImages[bannerIndex] + "')";
-
-    bannerIndex++;
-
-    if (bannerIndex == bannerImages.length) {
-        bannerIndex = 0;
-    }
-}
-
-changeBanner();
-
-setInterval(changeBanner, 3000);
-
-// ===== ORDER MODAL =====
-var currentProduct = "";
-var currentPrice = "";
-
-//Success Popup
-function closeSuccessPopup(){
-    document.getElementById("successPopup").style.display = "none";
-}
-// Logo system
-window.addEventListener("load", function(){
-
-    setTimeout(function(){
-
-    document.getElementById("splash").style.opacity = "0";
-
-    setTimeout(function(){
-        document.getElementById("splash").style.display = "none";
-    }, 500);
-
-}, 1500);
-
-});
-// help system 
-function openContact(){
-    document.getElementById("contactPopup").style.display = "flex";
-}
-
-function closeContact(){
-    document.getElementById("contactPopup").style.display = "none";
-}
-// alert cetegories 
-function comingSoon(){
-    alert("🚀 Fashion, Jewellery & Electronics categories are coming soon!");
-}
-// ===== SUPABASE PRODUCTS =====
-async function testSupabase() {
-    const { data, error } = await supabaseClient
-        .from("products")
-        .select("*")
-        .eq("is_active", true);
-
-    if (error) {
-        console.error("Supabase Error:", error);
+      if (!products.length) {
+        container.innerHTML =
+          '<div class="empty-state">No active products found yet. Add products in your store database to show them here.</div>';
         return;
-    }
+      }
 
-    console.log("Supabase Products:", data);
-    window.homeProducts = data;
+      products.slice(0, 10).forEach(product => {
+        const card = document.createElement("article");
+        card.className = "product-card";
 
-    const productsContainer = document.querySelector(".products");
-    productsContainer.innerHTML = "";
-
-    data.forEach(product => {
-        const card = document.createElement("div");
-        card.className = "card";
+        const id = encodeURIComponent(product.id);
+        const name = safeText(product.name || "Jewellery");
+        const image = safeText(product.image || "");
+        const price = Number(product.price) || 0;
+        const mrp = Number(product.mrp) || 0;
 
         card.innerHTML = `
-            <a href="products/product.html?id=${product.id}" class="product-link">
+          <a class="product-image-link" href="products/product.html?id=${id}" aria-label="View ${name}">
+            <img src="${image}" alt="${name}" loading="lazy">
+          </a>
 
-                <div class="product-image-box">
+          <button class="wishlist" type="button"
+            aria-label="Add ${name} to wishlist"
+            title="Wishlist"
+            onclick="alert('Wishlist feature needs to be connected to your wishlist system.')">♡</button>
 
-                    <img src="${product.image}" alt="${product.name}">
+          <div class="product-info">
+            <p class="product-name">${name}</p>
+            <div class="rating">★★★★★ <span style="color:#777">New</span></div>
 
-                    <span class="best-seller">
-                        Best Seller
-                    </span>
+            <div class="price">
+              ₹${price.toLocaleString("en-IN")}
+              ${mrp > price
+                ? `<span class="old-price">₹${mrp.toLocaleString("en-IN")}</span>`
+                : ""}
+            </div>
 
-                    ${
-                        product.mrp && Number(product.mrp) > Number(product.price)
-                        ? `
-                            <span class="discount-badge">
-                                ${Math.round(
-                                    ((Number(product.mrp) - Number(product.price)) /
-                                    Number(product.mrp)) * 100
-                                )}% OFF
-                            </span>
-                        `
-                        : ""
-                    }
-
-                </div>
-
-                <div class="card-price">
-
-                    <span class="offer-price">
-                        ₹${product.price}
-                    </span>
-
-                    ${
-                        product.mrp && Number(product.mrp) > Number(product.price)
-                        ? `
-                            <span class="old-price">
-                                ₹${product.mrp}
-                            </span>
-                        `
-                        : ""
-                    }
-
-                </div>
-
-                <div class="card-rating">
-                    ★★★★☆
-                </div>
-
-                <div class="card-name">
-                    ${product.name}
-                </div>
-
-                <button
-                    class="card-add-btn"
-                    onclick="event.preventDefault(); addHomeToCart(${product.id})">
-                    ADD TO CART
-                </button>
-
-            </a>
+            <button class="add-btn" type="button"
+              onclick="addHomeToCart(${JSON.stringify(String(product.id))})">
+              ADD TO CART
+            </button>
+          </div>
         `;
 
-        productsContainer.appendChild(card);
+        container.appendChild(card);
+      });
+    }
+
+    async function loadHomeProducts() {
+      const container = document.getElementById("homeProducts");
+
+      try {
+        const { data, error } = await supabaseClient
+          .from("products")
+          .select("*")
+          .eq("is_active", true);
+
+        if (error) throw error;
+
+        homeProducts = Array.isArray(data) ? data : [];
+        renderProducts(homeProducts);
+      } catch (error) {
+        console.error("Unable to load homepage products:", error);
+        container.innerHTML =
+          '<div class="empty-state">Products could not be loaded right now. Please try again later.</div>';
+      }
+    }
+
+    document.getElementById("searchInput").addEventListener("input", event => {
+      const query = event.target.value.trim().toLowerCase();
+
+      const filtered = homeProducts.filter(product =>
+        String(product.name || "").toLowerCase().includes(query)
+      );
+
+      renderProducts(filtered);
     });
-}
 
-testSupabase();
-</script>
-<div id="contactPopup" style="
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.6);
-justify-content:center;
-align-items:center;
-z-index:9999;
-">
+    async function updateAccountLink() {
+      const link = document.getElementById("accountLink");
 
-<div style="
-background:white;
-padding:25px;
-border-radius:15px;
-width:90%;
-max-width:350px;
-text-align:center;
-position:relative;
-">
+      try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
 
-<span onclick="closeContact()" style="
-position:absolute;
-right:15px;
-top:10px;
-font-size:25px;
-cursor:pointer;
-">&times;</span>
-
-<h2>Need Help?</h2>
-
-<p>📞 Phone: +91 9532499285</p>
-
-<p>📧 Email: officialzylo01@gmail.com</p>
-
-<p>🕒 Support Time: 10 AM - 7 PM</p>
-
-<a href="https://wa.me/919532499285" target="_blank"
-style="
-display:inline-block;
-margin-top:10px;
-background:#25D366;
-color:white;
-padding:10px 20px;
-border-radius:10px;
-text-decoration:none;
-">
-WhatsApp Chat
-</a>
-
-</div>
-</div>
-<div class="trust-section">
-
-    <div class="trust-card">
-        <span>🚚</span>
-        <h3>Fast Delivery</h3>
-        <p>Quick shipping across India</p>
-    </div>
-
-    <div class="trust-card">
-        <span>🔒</span>
-        <h3>Secure Orders</h3>
-        <p>Safe & trusted ordering process</p>
-    </div>
-
-    <div class="trust-card">
-        <span>📞</span>
-        <h3>24/7 Support</h3>
-        <p>Always ready to help you</p>
-    </div>
-
-    <div class="trust-card">
-        <span>💯</span>
-        <h3>Quality Products</h3>
-        <p>Carefully selected products</p>
-    </div>
-
-</div>
-<footer style="
-text-align:center;
-padding:25px;
-margin-top:40px;
-background:#111;
-color:white;
-border-radius:15px;
-">
-    <p>© 2026 ZyLo. All Rights Reserved.</p>
-    <p>Contact: officialzylo01@gmail.com</p>
-</footer>
-<script>
-
-// login and lagout
-
-async function checkLoginStatus() {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-
-    const navLinks = document.querySelector(".nav-links");
-
-    if (!navLinks) return;
-
-    const loginLink = navLinks.querySelector('a[href="login.html"]');
-
-    if (session && loginLink) {
-
-        loginLink.textContent = "👤 Account";
-        loginLink.href = "#";
-        loginLink.onclick = function (event) {
-            event.preventDefault();
-
-            const logout = confirm(
-                "Logged in as:\n" + session.user.email +
-                "\n\nDo you want to logout?"
-            );
-
-            if (logout) {
-                logoutUser();
-            }
-        };
-    }
-}
-
-async function logoutUser() {
-    const { error } = await supabaseClient.auth.signOut();
-
-    if (error) {
-        alert("Logout failed. Please try again.");
-        console.error(error);
-        return;
+        link.href = session ? "account.html" : "login.html";
+        link.setAttribute("aria-label", session ? "Account" : "Login");
+        link.title = session ? "Account" : "Login";
+      } catch (error) {
+        console.warn("Could not check login state:", error);
+      }
     }
 
-    alert("Logged out successfully!");
+    supabaseClient.auth.onAuthStateChange(() => updateAccountLink());
 
-    window.location.reload();
-}
-
-checkLoginStatus();
-</script>
-<!-- ===== MOBILE BOTTOM NAV ===== -->
-
-<div class="mobile-bottom-nav">
-
-    <a href="index.html">
-        <span class="mobile-bottom-icon">⌂</span>
-        <span>Home</span>
-    </a>
-
-    <a href="cart.html">
-        <span class="mobile-bottom-icon">🛒</span>
-        <span>Cart (<span id="mobileCartCount">0</span>)</span>
-    </a>
-
-    <a href="account.html">
-        <span class="mobile-bottom-icon">♙</span>
-        <span>Account</span>
-    </a>
-
-</div>
+    updateAccountLink();
+    loadHomeProducts();
+  </script>
 </body>
 </html>
