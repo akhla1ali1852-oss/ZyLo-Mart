@@ -162,51 +162,339 @@
                 padding-bottom: 85px;
             }
         }
+        
+        /* ===== ZYLO ACCOUNT PAGE DESIGN ===== */
+
+        .brand {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 400;
+            letter-spacing: -2px;
+        }
+
+        .logo span {
+            font-size: 18px;
+            vertical-align: top;
+        }
+
+        .brand-tagline {
+            font-size: 10px;
+            letter-spacing: 4px;
+            color: #555;
+        }
+
+        .header-cart {
+            position: relative;
+            text-decoration: none;
+            font-size: 27px;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -9px;
+            width: 22px;
+            height: 22px;
+            display: grid;
+            place-items: center;
+            background: #e9a6ae;
+            border-radius: 50%;
+            font-size: 12px;
+            color: #111;
+        }
+
+        .account-heading {
+            margin-bottom: 28px;
+        }
+
+        .account-heading h1 {
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
+
+        .account-heading p {
+            font-size: 17px;
+            color: #747783;
+            line-height: 1.5;
+        }
+
+        .account-heading p span {
+            color: #df9ca6;
+        }
+
+        .profile-row {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding-bottom: 25px;
+        }
+
+        .profile-avatar {
+            width: 78px;
+            height: 78px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: #f5e3e5;
+            display: grid;
+            place-items: center;
+            font-size: 42px;
+            color: #111827;
+        }
+
+        .profile-details {
+            min-width: 0;
+        }
+
+        .hello-text {
+            color: #777986;
+            font-size: 17px;
+            margin-bottom: 5px;
+        }
+
+        .profile-details > strong {
+            display: block;
+            font-size: 16px;
+            overflow-wrap: anywhere;
+            line-height: 1.4;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 10px;
+            padding: 7px 11px;
+            background: #e8f6eb;
+            color: #287347;
+            border-radius: 25px;
+            font-size: 12px;
+        }
+
+        .verified-badge span {
+            display: grid;
+            place-items: center;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #53b878;
+            color: white;
+            font-weight: bold;
+        }
+
+        .account-divider {
+            height: 1px;
+            background: #ededed;
+            margin-bottom: 22px;
+        }
+
+        .account-action {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 17px 14px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 15px;
+            background: #f7f7f8;
+            color: #111827;
+            text-align: left;
+            text-decoration: none;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .action-icon {
+            width: 58px;
+            height: 58px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border-radius: 17px;
+            background: #e9e5ff;
+            font-size: 30px;
+        }
+
+        .logout-action .action-icon {
+            background: #f9e0e3;
+        }
+
+        .action-text {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .action-text strong {
+            font-size: 18px;
+        }
+
+        .action-text small {
+            color: #727584;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .action-arrow {
+            color: #777986;
+            font-size: 30px;
+            line-height: 1;
+        }
+
+        /* Mobile-only layout */    
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 20px 6%;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .container {
+                margin: 35px auto 25px;
+                padding: 0 18px;
+            }
+
+            .account-card {
+                padding: 22px 17px;
+                border-radius: 22px;
+                box-shadow: 0 5px 24px rgba(0,0,0,0.04);
+            }
+
+            .account-heading h1 {
+                font-size: 32px;
+            }
+
+            .account-heading p {
+                font-size: 16px;
+            }
+
+            .profile-row {
+                gap: 13px;
+            }
+
+            .profile-avatar {
+                width: 65px;
+                height: 65px;
+                font-size: 34px;
+            }
+
+            .profile-details > strong {
+                font-size: 14px;
+            }
+
+            .action-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 25px;
+                border-radius: 14px;
+            }
+
+            .account-action {
+                gap: 12px;
+                padding: 15px 11px;
+            }
+
+            .action-text strong {
+                font-size: 16px;
+            }
+
+            .action-text small {
+                font-size: 11px;
+            }
+
+            .mobile-bottom-nav a:last-child {
+                position: relative;
+                color: #111827;
+            }
+
+            .mobile-bottom-nav a:last-child::after {
+                content: "";
+                position: absolute;
+                bottom: -9px;
+                width: 65px;
+                height: 4px;
+                border-radius: 5px;
+                background: #e9a6ae;
+            }
+    }
+
     </style>
 </head>
 
 <body>
-
     <!-- NAVBAR -->
     <div class="navbar">
-
-        <h2 class="logo">ZyLo Mart</h2>
-
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="cart.html">🛒 Cart</a>
+        <div class="brand">
+            <h2 class="logo">ZyLo<span>✦</span></h2>
+            <p class="brand-tagline">JEWELLERY · STYLE · YOU</p>
         </div>
 
+        <a href="cart.html" class="header-cart" aria-label="Shopping cart">
+            🛒
+            <span class="cart-badge" id="headerCartCount">0</span>
+        </a>
     </div>
-
 
     <!-- ACCOUNT -->
     <div class="container">
+        <div class="account-heading">
+            <h1>My Account</h1>
+            <p>Manage your profile, orders and more <span>✦</span></p>
+        </div>
 
         <div class="account-card">
+            <div class="profile-row">
+                <div class="profile-avatar">♟</div>
 
-            <h1>👤 My Account</h1>
-
-            <div class="info-box">
-                <strong>Email</strong>
-                <span id="userEmail">Loading...</span>
+                <div class="profile-details">
+                    <p class="hello-text">Hello,</p>
+                    <strong id="userEmail">Loading...</strong>
+                    <div class="verified-badge">
+                        <span>✓</span> Verified Account
+                    </div>
+                </div>
             </div>
 
-            <a href="my-orders.html" class="button">
-                📦 My Orders
+            <div class="account-divider"></div>
+
+            <a href="my-orders.html" class="account-action orders-action">
+                <span class="action-icon">♧</span>
+                <span class="action-text">
+                    <strong>My Orders</strong>
+                    <small>Track, view and manage your orders</small>
+                </span>
+                <span class="action-arrow">›</span>
             </a>
 
             <button
-                class="button logout-btn"
-                onclick="logoutUser()">
-                🚪 Logout
+                type="button"
+                class="account-action logout-action"
+                onclick="logoutUser()"
+            >
+                <span class="action-icon">⇥</span>
+                <span class="action-text">
+                    <strong>Logout</strong>
+                    <small>Sign out from your account</small>
+                </span>
+                <span class="action-arrow">›</span>
             </button>
 
             <div id="message"></div>
-
         </div>
-
     </div>
+
 
 
     <script>
@@ -274,6 +562,32 @@
 
             window.location.href = "index.html";
         }
+
+        function updateHeaderCartCount() {
+            const badge = document.getElementById("headerCartCount");
+
+            if (!badge) return;
+
+            let cart = [];
+
+            try {
+                cart = JSON.parse(localStorage.getItem("zyloCart")) || [];
+            } catch (error) {
+                cart = [];
+            }
+
+            const totalQuantity = cart.reduce(
+                (total, item) => total + (Number(item.quantity) || 0),
+                0
+            );
+
+            badge.textContent = totalQuantity;
+        }
+
+        updateHeaderCartCount();
+
+        window.addEventListener("storage", updateHeaderCartCount);
+        window.addEventListener("cartUpdated", updateHeaderCartCount);
 
 
         // START
