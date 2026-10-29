@@ -573,6 +573,16 @@ footer {
         line-height: 1;
     }
 }
+/* Zylo: Hide duplicate top navigation on mobile only */
+@media screen and (max-width: 768px) {
+
+    .navbar .nav-links > a[href="index.html"],
+    .navbar .nav-links #cartNav,
+    .navbar .nav-links #authNav {
+        display: none !important;
+    }
+
+}
 </style>
 
 <!-- Existing services -->
@@ -616,7 +626,7 @@ gtag('config', 'G-490MKJZKP7');
         <a href="index.html">Home</a>
 
         <a href="#" onclick="openContact(); return false;">
-            Contact
+            Help
         </a>
 
         <span id="cartNav">
