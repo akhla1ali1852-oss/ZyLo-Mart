@@ -27,6 +27,14 @@ function addToCart() {
     const productName = document.getElementById("productName")?.textContent.trim();
     const priceText = document.getElementById("productPrice")?.textContent.trim();
     const image = document.getElementById("productImage")?.src;
+    if (window.zyloProductStock !== undefined &&
+        window.zyloProductStock !== null &&
+        window.zyloProductStock <= 0) {
+
+        alert("Sorry! This product is SOLD OUT.");
+
+        return;
+    }
 
     if (!productId || !productName || !priceText) {
         alert("Product information not found.");
@@ -390,6 +398,14 @@ function createOrderModal() {
 // ==========================================
 
 function orderProduct() {
+    if (window.zyloProductStock !== undefined &&
+        window.zyloProductStock !== null &&
+        window.zyloProductStock <= 0) {
+
+        alert("Sorry! This product is SOLD OUT.");
+
+        return;
+    }
 
     createOrderModal();
 
@@ -471,6 +487,15 @@ function closeProductOrder() {
 // ==========================================
 
 async function submitProductOrder() {
+
+    if (window.zyloProductStock !== undefined &&
+        window.zyloProductStock !== null &&
+        window.zyloProductStock <= 0) {
+
+        alert("Sorry! This product is SOLD OUT. Order cannot be placed.");
+
+        return;
+    }
 
     const name =
         document.getElementById("customerName")

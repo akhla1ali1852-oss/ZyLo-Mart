@@ -103,6 +103,21 @@
             margin: 15px 0;
             font-weight: bold;
         }
+        /* SOLD OUT DESIGN */
+        .stock.sold-out {
+            color: #dc2626;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .product-actions button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #999;
+            color: white;
+            border-color: #999;
+        }
 
         .cart-btn {
             width: 100%;
@@ -433,22 +448,48 @@
                     "none";
             }
 
-
             // ==============================
-            // STOCK
+            // STOCK & SOLD OUT
             // ==============================
 
-            if (product.stock > 0) {
+            window.zyloProductStock = Number(product.stock) || 0;
 
-                document.getElementById("productStock").textContent =
-                    "Only " + product.stock + " left";
+            const stockElement = document.getElementById("productStock");
+
+            const cartButton = document.querySelector(".cart-btn");
+            const orderButton = document.querySelector(".order-btn");
+
+            const quantityButtons = document.querySelectorAll(
+                ".quantity-box button"
+            );
+
+            if (window.zyloProductStock > 0) {
+
+                stockElement.textContent =
+                    "Only " + window.zyloProductStock + " left";
+
+                stockElement.classList.remove("sold-out");
 
             } else {
 
-                document.getElementById("productStock").textContent =
-                    "Out of Stock";
+                stockElement.textContent = "SOLD OUT";
 
+                stockElement.classList.add("sold-out");
+
+                cartButton.disabled = true;
+                cartButton.textContent = "Sold Out";
+
+                orderButton.disabled = true;
+                orderButton.textContent = "Sold Out";
+
+                quantityButtons.forEach(button => {
+                    button.disabled = true;
+                });
+
+                document.getElementById("productQuantity").textContent = "0";
             }
+
+
 
             // LOAD ALL PRODUCT IMAGES
 
